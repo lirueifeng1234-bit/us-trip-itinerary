@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NYC · Boston 12-Day Itinerary</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',sans-serif;background:#f5f4f1;color:#1c1c1e}
+#app{height:100vh;display:flex;flex-direction:column}
+
+#hd{padding:.75rem 1.25rem;background:#fff;border-bottom:1px solid #e8e7e4;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:1rem}
+#hd-left h1{font-size:1rem;font-weight:600;letter-spacing:-.01em}
+#hd-left .sub{font-size:.72rem;color:#999;margin-top:1px}
+.legend{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center}
+.leg-item{display:flex;align-items:center;gap:.35rem;font-size:.7rem;color:#666}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+#body{flex:1;display:flex;overflow:hidden;min-height:0}
+
+#sidebar{width:272px;flex-shrink:0;background:#fff;border-right:1px solid #e8e7e4;display:flex;flex-direction:column;overflow:hidden}
+#sidebar-hd{padding:.6rem .75rem .35rem;flex-shrink:0}
+.all-btn{width:100%;border:none;background:transparent;text-align:left;padding:.5rem .7rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:500;color:#555;display:flex;align-items:center;gap:.5rem;transition:background .12s}
+.all-btn:hover{background:#f0efe9}
+.all-btn.active{background:#eeede8;color:#1c1c1e;font-weight:600}
+
+#tabs{flex:1;overflow-y:auto;padding:.3rem .5rem .75rem;display:flex;flex-direction:column;gap:2px}
+#tabs::-webkit-scrollbar{width:4px}
+#tabs::-webkit-scrollbar-thumb{background:#d4d3ce;border-radius:2px}
+
+.day-btn{width:100%;border:none;background:transparent;text-align:left;padding:.45rem .65rem;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:.6rem;transition:background .12s}
+.day-btn:hover{background:#f5f4f0}
+.day-btn.active{background:#eeede8}
+
+.dnum{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;color:#fff}
+.dnum-nyc{background:#3b82f6}
+.dnum-boston{background:#10b981}
+.dnum-transit{background:#8b5cf6}
+.dnum-sidetrip{background:#f59e0b}
+.dnum-tech{background:#06b6d4}
+.dnum-harvard{background:#c0392b}
+
+.dinfo{flex:1;min-width:0}
+.dcity{font-size:.62rem;color:#999;line-height:1;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dtheme{font-size:.78rem;font-weight:500;line-height:1.25;color:#1c1c1e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dcount{font-size:.62rem;color:#bbb;flex-shrink:0}
+
+#map-wrap{flex:1;position:relative}
+#map{width:100%;height:100%}
+
+#info-panel{position:absolute;bottom:1rem;right:1rem;background:#fff;border:1px solid #e8e7e4;border-radius:12px;padding:.75rem 1rem;max-width:260px;box-shadow:0 4px 20px rgba(0,0,0,.1);z-index:800;display:none}
+#info-panel .ip-day{font-size:.65rem;color:#999;margin-bottom:.2rem}
+#info-panel .ip-title{font-size:.88rem;font-weight:600;margin-bottom:.2rem;line-height:1.25}
+#info-panel .ip-city{font-size:.72rem;color:#666;margin-bottom:.5rem}
+#info-panel .ip-spots{list-style:none;display:flex;flex-direction:column;gap:.2rem}
+#info-panel .ip-spots li{font-size:.72rem;color:#444;display:flex;align-items:baseline;gap:.35rem;line-height:1.3}
+.ip-close{position:absolute;top:.45rem;right:.6rem;border:none;background:transparent;cursor:pointer;font-size:1rem;color:#bbb;line-height:1;padding:.1rem}
+.ip-close:hover{color:#555}
+
+/* Leaflet popup */
+.leaflet-popup-content-wrapper{border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.14);border:1px solid #eee;padding:0;overflow:hidden}
+.leaflet-popup-tip-container{margin-top:-1px}
+.leaflet-popup-content{margin:0;min-width:190px;max-width:250px}
+.pu{padding:.8rem 1rem}
+.pu-name{font-size:.85rem;font-weight:600;color:#1c1c1e;margin-bottom:.2rem;line-height:1.3}
+.pu-meta{font-size:.7rem;color:#999;margin-bottom:.4rem}
+.pu-tip{font-size:.72rem;color:#444;line-height:1.55}
+.pu-warn{font-size:.65rem;color:#c2622c;margin-top:.35rem;font-style:italic}
+
+/* ── Hover image tooltip ── */
+#img-tip{
+  position:fixed;
+  display:none;
+  z-index:9999;
+  pointer-events:none;
+  background:#fff;
+  border:1px solid #e0dfd9;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.18);
+  width:230px;
+  transition:opacity .12s;
+}
+#img-tip-img{
+  width:230px;
+  height:148px;
+  object-fit:cover;
+  display:block;
+  background:#f0efe9;
+}
+#img-tip-fallback{
+  width:230px;
+  height:148px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  font-size:.78rem;
+  font-weight:500;
+  color:#888;
+  background:#f5f4f0;
+  text-align:center;
+  padding:1rem;
+}
+#img-tip-body{padding:.55rem .75rem .65rem}
+#img-tip-name{font-size:.8rem;font-weight:600;color:#1c1c1e;margin-bottom:.15rem;line-height:1.25}
+#img-tip-dur{font-size:.68rem;color:#999}
+#img-tip-day{font-size:.65rem;color:#bbb;margin-top:.1rem}
+
+@media(max-width:640px){
+  #sidebar{width:100%;border-right:none;border-bottom:1px solid #e8e7e4;height:auto;flex-shrink:0}
+  #body{flex-direction:column}
+  #tabs{flex-direction:row;overflow-x:auto;overflow-y:hidden;padding:.3rem .5rem;gap:4px;flex:none}
+  .day-btn{flex-shrink:0;width:auto;padding:.4rem .6rem}
+  .dinfo .dcity,.dcount{display:none}
+  #map-wrap{flex:1;min-height:300px}
+  #info-panel,#img-tip{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hd">
+    <div id="hd-left">
+      <h1>NYC · Boston 12-Day Itinerary</h1>
+      <div class="sub">Finance · Tech · Spectacular · MIT · Harvard &nbsp;—&nbsp; hover markers for photos, click for details</div>
+    </div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#3b82f6"></div>New York</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#06b6d4"></div>MIT Day</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#c0392b"></div>Harvard Day</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#10b981"></div>Boston</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div>Transit</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div>Day Trip</div>
+    </div>
+  </div>
+  <div id="body">
+    <div id="sidebar">
+      <div id="sidebar-hd">
+        <button class="all-btn active" id="all-btn" onclick="showAll()">
+          🗺&nbsp; Overview — All 12 Days
+        </button>
+      </div>
+      <div id="tabs"></div>
+    </div>
+    <div id="map-wrap">
+      <div id="map"></div>
+      <div id="info-panel">
+        <button class="ip-close" onclick="closeInfoPanel()">✕</button>
+        <div class="ip-day" id="ip-day"></div>
+        <div class="ip-title" id="ip-title"></div>
+        <div class="ip-city" id="ip-city"></div>
+        <ul class="ip-spots" id="ip-spots"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hover image tooltip -->
+<div id="img-tip">
+  <img id="img-tip-img" src="" alt="">
+  <div id="img-tip-fallback"></div>
+  <div id="img-tip-body">
+    <div id="img-tip-name"></div>
+    <div id="img-tip-dur"></div>
+    <div id="img-tip-day"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ── All spot coordinates are approximate — verify before visiting ── */
+const WC = name => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(name)}?width=460`;
+
+const DAYS = [
+  {
+    id:1, type:'nyc', label:'Day 1', city:'New York City', theme:'Arrival · Spectacle',
+    spots:[
+      {name:'Times Square', lat:40.7580, lng:-73.9855, dur:'1–2 hrs',
+       tip:'Best at dusk when neon is at full glory. Hell\'s Kitchen nearby is great for dinner.',
+       img: WC('New_york_times_square-terabass.jpg')},
+      {name:'Edge Observation Deck', lat:40.7539, lng:-74.0022, dur:'1.5 hrs',
+       tip:'Highest outdoor sky deck in the Western Hemisphere — 100 floors, glass floor included. Tickets ~$38–50, book in advance. Verify before visiting.',
+       img: WC('Edge_(observation_deck)_11-10-2021.jpg')},
+      {name:'The Vessel', lat:40.7536, lng:-74.0019, dur:'30 min',
+       tip:'Iconic 16-story spiral staircase sculpture at Hudson Yards. Free to view outside. Check current access status before visiting.',
+       img: WC('The_Vessel_(48082084821).jpg')},
+    ]
+  },
+  {
+    id:2, type:'nyc', label:'Day 2', city:'New York City', theme:'Financial Heart',
+    spots:[
+      {name:'Wall Street', lat:40.7074, lng:-74.0113, dur:'30 min',
+       tip:'Walk the most famous street in global finance. Federal Hall across from the NYSE is free to enter.',
+       img: WC('Wall_Street_-_NYC.jpg')},
+      {name:'New York Stock Exchange', lat:40.7069, lng:-74.0089, dur:'20 min',
+       tip:'Exterior photo stop — interior not open to the public. Best angle from Broad St. The building dates to 1903.',
+       img: WC('New_York_Stock_Exchange.jpg')},
+      {name:'Charging Bull', lat:40.7056, lng:-74.0134, dur:'15 min',
+       tip:'Symbol of Wall Street optimism since 1989. Crowds are heavy mid-day — early morning gives you breathing room.',
+       img: WC('Charging_Bull_in_New_York_City.jpg')},
+      {name:'9/11 Memorial & Museum', lat:40.7115, lng:-74.0130, dur:'2–3 hrs',
+       tip:'Reflecting pools on the original tower footprints — profoundly moving. Museum tickets ~$33, memorial is free. Book ahead.',
+       img: WC('National_September_11_Memorial_reflecting_pools.jpg')},
+      {name:'One World Observatory', lat:40.7127, lng:-74.0134, dur:'1.5 hrs',
+       tip:'102nd floor views of all five boroughs. Sky Portal floor panel is a highlight. Tickets ~$40. Verify current pricing.',
+       img: WC('One_World_Trade_Center,_New_York.jpg')},
+    ]
+  },
+  {
+    id:3, type:'nyc', label:'Day 3', city:'New York City', theme:'Bridge · Skyline',
+    spots:[
+      {name:'Brooklyn Bridge', lat:40.7061, lng:-73.9969, dur:'45 min–1 hr',
+       tip:'Walk Manhattan-side → Brooklyn (~1.1 miles). Go at sunrise or sunset for the best light and thinnest crowds.',
+       img: WC('Brooklyn_Bridge_Postdlf.jpg')},
+      {name:'DUMBO', lat:40.7033, lng:-73.9888, dur:'1.5 hrs',
+       tip:'Washington St. framing the Manhattan Bridge is one of NYC\'s most photographed spots. Artsy cafés and galleries line the cobblestone streets.',
+       img: WC('DUMBO,_Brooklyn_-_Washington_Street_with_Manhattan_Bridge.jpg')},
+      {name:'Brooklyn Heights Promenade', lat:40.6977, lng:-73.9997, dur:'1 hr',
+       tip:'Arguably the best panoramic view of the Manhattan skyline, especially golden hour. Free and uncrowded compared to observation decks.',
+       img: WC('BrooklynHeightsPromenade.JPG')},
+      {name:'Time Out Market NY', lat:40.7030, lng:-73.9890, dur:'1 hr',
+       tip:'Curated food hall in DUMBO, featuring the best NYC restaurants under one roof. Great lunch stop.',
+       img: WC('Time_Out_Market_New_York.jpg')},
+    ]
+  },
+  {
+    id:4, type:'nyc', label:'Day 4', city:'New York City', theme:'Liberty · Harbor',
+    spots:[
+      {name:'Battery Park', lat:40.7033, lng:-74.0170, dur:'30 min',
+       tip:'Starting point for Statue of Liberty ferries. Arrive early to catch the first boat and beat the crowds.',
+       img: WC('Battery_Park_New_York.jpg')},
+      {name:'Statue of Liberty', lat:40.6892, lng:-74.0445, dur:'2–3 hrs (incl. ferry)',
+       tip:'America\'s most iconic landmark. Crown tickets sell out weeks ahead — book early on nps.gov. Pedestal is also impressive. Verify schedule.',
+       img: WC('Statue_of_Liberty_7.jpg')},
+      {name:'Ellis Island', lat:40.6995, lng:-74.0397, dur:'1.5 hrs',
+       tip:'Gateway for 12 million immigrants from 1892–1954. Included with ferry ticket. The Great Hall\'s restoration is remarkable.',
+       img: WC('Ellis_Island_Shot.jpg')},
+    ]
+  },
+  {
+    id:5, type:'nyc', label:'Day 5', city:'New York City', theme:'Culture · Art · Science',
+    spots:[
+      {name:'Central Park', lat:40.7851, lng:-73.9683, dur:'1.5 hrs',
+       tip:'843 acres of green in the heart of Manhattan. Start at Bethesda Fountain, walk to Bow Bridge for photos. Bike rental available.',
+       img: WC('USA-NYC-Central_Park.jpg')},
+      {name:'The Metropolitan Museum of Art', lat:40.7794, lng:-73.9632, dur:'2–3 hrs',
+       tip:'One of the world\'s great museums. Tickets ~$30. Focus on Egyptian Art, Arms & Armor, and the Roof Garden for a curated experience.',
+       img: WC('Metropolitan_Museum_of_Art_(The_Met)_-_Central_Park,_NYC.jpg')},
+      {name:'Top of the Rock (Rockefeller Center)', lat:40.7587, lng:-73.9787, dur:'1 hr',
+       tip:'Open-air platform with Empire State Building in the frame — a view you can\'t get from ESB itself. Tickets ~$40. Verify pricing.',
+       img: WC('30_Rock_from_Top.jpg')},
+      {name:'MoMA', lat:40.7614, lng:-73.9776, dur:'1.5 hrs',
+       tip:'Van Gogh\'s Starry Night, Warhol, and cutting-edge contemporary tech art. Tickets ~$30. Less crowded on weekday afternoons.',
+       img: WC('MoMA_NYC.jpg')},
+    ]
+  },
+  {
+    id:6, type:'transit', label:'Day 6', city:'NYC → Boston', theme:'Transit Day · Seaport',
+    spots:[
+      {name:'The High Line', lat:40.7480, lng:-74.0048, dur:'1 hr',
+       tip:'Elevated park built on a disused 1930s freight rail line — one of NYC\'s most creative urban renewal projects. Free.',
+       img: WC('High_Line_NYC_spring_2014.jpg')},
+      {name:'Penn Station — Amtrak Departure', lat:40.7506, lng:-73.9971, dur:'—',
+       tip:'Take Amtrak Acela Express to Boston (3.5 hrs). Book early for best prices. Acela tickets vary widely by time.',
+       img: WC('Moynihan_Train_Hall_Interior.jpg')},
+      {name:'Boston South Station — Arrival', lat:42.3519, lng:-71.0552, dur:'—',
+       tip:'Main Amtrak terminus in Boston. Red Line subway connects directly to most neighborhoods.',
+       img: WC('South_Station_Boston.jpg')},
+      {name:'Seaport District', lat:42.3533, lng:-71.0493, dur:'1.5 hrs',
+       tip:'Boston\'s innovation hub — biotech firms, top restaurants, and harbor views. Perfect for a first-night dinner.',
+       img: WC('Boston_Seaport_District.jpg')},
+    ]
+  },
+  {
+    id:7, type:'tech', label:'Day 7', city:'Cambridge — MIT', theme:'MIT Full Day',
+    spots:[
+      {name:'MIT Stata Center', lat:42.3620, lng:-71.0897, dur:'45 min',
+       tip:'Frank Gehry\'s wildly deconstructivist building, home to CSAIL (AI Lab) and EECS. Walk the maze-like interior — it\'s intentionally disorienting.',
+       img: WC('MIT_CSAIL_building.jpg')},
+      {name:'MIT Infinite Corridor', lat:42.3598, lng:-71.0929, dur:'30 min',
+       tip:'251-meter indoor corridor linking campus buildings. Twice a year the setting sun aligns perfectly — MIT-Henge. Free to walk through.',
+       img: WC('Infinite_Corridor.jpg')},
+      {name:'MIT Museum', lat:42.3601, lng:-71.0871, dur:'1.5 hrs',
+       tip:'Robotics, holograms, and AI exhibits from MIT research labs. Genuinely surprising interactive tech on display. Tickets ~$20. Verify before visiting.',
+       img: WC('MIT_Museum_entrance_2022.jpg')},
+      {name:'MIT Great Dome (Killian Court)', lat:42.3598, lng:-71.0934, dur:'30 min',
+       tip:'The iconic domed building overlooking the Charles River. Classic photo spot and gathering point for graduations.',
+       img: WC('MIT_Dome_night1_Edit.jpg')},
+      {name:'Kendall Square', lat:42.3626, lng:-71.0886, dur:'1 hr',
+       tip:'"The most innovative square mile on the planet." Google, Pfizer, Biogen, and 200+ startups cluster here. Walk around and feel the density of ideas.',
+       img: WC('Kendall_Square_Cambridge_Massachusetts.jpg')},
+    ]
+  },
+  {
+    id:8, type:'harvard', label:'Day 8', city:'Cambridge — Harvard', theme:'Harvard Full Day',
+    spots:[
+      {name:'Harvard Yard', lat:42.3770, lng:-71.1167, dur:'1 hr',
+       tip:'The historic heart of America\'s oldest university (1636). John Harvard statue, red-brick dormitories, centuries of tradition. Free and open to the public.',
+       img: WC('Harvard_Yard,_Cambridge_MA.jpg')},
+      {name:'Harvard Art Museums', lat:42.3736, lng:-71.1142, dur:'1.5 hrs',
+       tip:'Three museums in one building: Fogg, Busch-Reisinger, and Sackler. Superb collection with Impressionists and German Expressionism. Tickets ~$20. Verify.',
+       img: WC('Harvard_Art_Museums_after_renovation.jpg')},
+      {name:'Harvard Museum of Natural History', lat:42.3782, lng:-71.1155, dur:'1 hr',
+       tip:'Famous for the Glass Flowers — 4,000 botanically accurate glass models. Dinosaur skeletons and meteorites also on display. Tickets ~$15. Verify.',
+       img: WC('Harvard_Museum_of_Natural_History.jpg')},
+      {name:'Harvard Business School Campus', lat:42.3671, lng:-71.1248, dur:'45 min',
+       tip:'Across the Charles River from main campus — stately brick buildings and manicured grounds. Free to walk. The case-study method was born here in 1908.',
+       img: WC('Harvard_Business_School_Aldrich_Hall.jpg')},
+      {name:'Harvard Square', lat:42.3736, lng:-71.1190, dur:'1 hr',
+       tip:'Vibrant square with independent bookshops (Harvard Book Store est. 1932), street performers, and legendary coffee culture. Perfect for a relaxed evening.',
+       img: WC('Harvard_Square_2018_01.jpg')},
+    ]
+  },
+  {
+    id:9, type:'boston', label:'Day 9', city:'Boston', theme:'History & Finance Roots',
+    spots:[
+      {name:'Boston Common', lat:42.3554, lng:-71.0655, dur:'30 min',
+       tip:'Oldest public park in the US (1634). Freedom Trail start point. Central Fountain is a classic photo spot. Free.',
+       img: WC('Boston_Common_and_Public_Garden_aerial.jpg')},
+      {name:'Massachusetts State House', lat:42.3588, lng:-71.0636, dur:'30 min',
+       tip:'The 23-karat gold dome dominates Beacon Hill. Free guided tours inside — Senate chamber and Doric Hall are highlights. Verify schedule.',
+       img: WC('Massachusetts_State_House,_Boston,_Massachusetts.jpg')},
+      {name:'Old South Meeting House', lat:42.3575, lng:-71.0580, dur:'45 min',
+       tip:'Where the Boston Tea Party was organized in 1773 — America\'s first tax revolt. A pivotal site for understanding financial rebellion. Tickets ~$8.',
+       img: WC('Old_South_Meeting_House.jpg')},
+      {name:'Faneuil Hall', lat:42.3600, lng:-71.0560, dur:'30 min',
+       tip:'"Cradle of Liberty" — where patriots debated independence. First floor is a lively food market. Free.',
+       img: WC('Faneuil_Hall,_Boston,_Massachusetts.jpg')},
+      {name:'Quincy Market', lat:42.3601, lng:-71.0559, dur:'1 hr',
+       tip:'19th-century Greek Revival market hall, now filled with restaurants and food stalls. Great for lunch.',
+       img: WC('Quincy_Market,_Boston,_Massachusetts.jpg')},
+      {name:'Old State House', lat:42.3584, lng:-71.0574, dur:'30 min',
+       tip:'Boston\'s oldest public building (1713), the seat of colonial financial and legal power. Boston Massacre site is directly outside. Tickets ~$14.',
+       img: WC('Old_State_House_Boston.jpg')},
+    ]
+  },
+  {
+    id:10, type:'sidetrip', label:'Day 10', city:'Salem (Day Trip, ~30 min)', theme:'Witch Trials · Novel History',
+    spots:[
+      {name:'Salem Witch Museum', lat:42.5240, lng:-70.8974, dur:'1.5 hrs',
+       tip:'Dramatic recreation of the 1692 witch trial hysteria — a genuinely strange and fascinating chapter of American history. Tickets ~$17. Verify.',
+       img: WC('Salem_Witch_Museum.jpg')},
+      {name:'Peabody Essex Museum', lat:42.5208, lng:-70.8969, dur:'1.5 hrs',
+       tip:'One of the oldest continuously operating museums in the US. Maritime trade, Asian art, and a transplanted Chinese house inside. Tickets ~$28. Verify.',
+       img: WC('PeabodyEssexMuseum.jpg')},
+      {name:'Salem Heritage Trail', lat:42.5195, lng:-70.8967, dur:'1 hr',
+       tip:'Follow the red line through downtown Salem, passing all key sites from the witch trial era. Free and self-guided.',
+       img: WC('Salem_Heritage_Trail.jpg')},
+      {name:'Derby Wharf', lat:42.5206, lng:-70.8889, dur:'45 min',
+       tip:'18th-century trade hub, now a National Historic Site. Tall ships docked here. Great harbor walk, free.',
+       img: WC('Salem_Maritime_NHS_Derby_Wharf.jpg')},
+    ]
+  },
+  {
+    id:11, type:'sidetrip', label:'Day 11', city:'Newport, RI (Day Trip, ~1 hr)', theme:'Gilded Age · Spectacular Mansions',
+    spots:[
+      {name:'The Breakers', lat:41.4754, lng:-71.2999, dur:'2 hrs',
+       tip:'Vanderbilt family\'s 70-room Italian Renaissance summer palace (1895). The most spectacular Gilded Age mansion open to the public. Tickets ~$26–35. Verify.',
+       img: WC('TheBreakers.jpg')},
+      {name:'Cliff Walk', lat:41.4794, lng:-71.2945, dur:'1.5 hrs',
+       tip:'3.5-mile trail where the Atlantic crashes on one side and Gilded Age mansions rise on the other. Free, dramatic, and unforgettable.',
+       img: WC('Newport_cliff_walk_overview.jpg')},
+      {name:'Marble House', lat:41.4717, lng:-71.3025, dur:'1 hr',
+       tip:'William K. Vanderbilt\'s 1892 summer cottage inspired by the Petit Trianon at Versailles. Gold Ballroom is jaw-dropping. Tickets ~$26. Verify.',
+       img: WC('Marble_House_Newport_RI.jpg')},
+      {name:'Newport Harbor', lat:41.4901, lng:-71.3128, dur:'1 hr',
+       tip:'End the day with fresh lobster by the water, watching yachts drift in. The harbor epitomizes old American money.',
+       img: WC('Newport_harbor_ri.jpg')},
+    ]
+  },
+  {
+    id:12, type:'boston', label:'Day 12', city:'Boston', theme:'Finale · Departure',
+    spots:[
+      {name:'Prudential Skywalk Observatory', lat:42.3476, lng:-71.0822, dur:'1 hr',
+       tip:'360° panorama from 50 floors up — includes Charles River, Cambridge, and Boston Harbor. Best skyline shot in the city. Tickets ~$21. Verify.',
+       img: WC('Prudential_Center,_Boston.jpg')},
+      {name:'Boston Public Library', lat:42.3496, lng:-71.0784, dur:'30–45 min',
+       tip:'1895 Italian Renaissance masterpiece. Bates Hall reading room and the serene courtyard are breathtaking. Free.',
+       img: WC('Boston_Public_Library_in_Copley_Square.jpg')},
+      {name:'Fenway Park', lat:42.3467, lng:-71.0972, dur:'1.5 hrs',
+       tip:'Oldest MLB ballpark (1912), home of the Red Sox. Behind-the-Scenes Tours run daily — tickets ~$25. Check the schedule and book ahead.',
+       img: WC('Fenway_Park,_Boston,_MA_(aerial).jpg')},
+      {name:'Copley Square', lat:42.3496, lng:-71.0779, dur:'30 min',
+       tip:'Boston Marathon finish line. Surrounded by Trinity Church and the BPL. A perfect final walk before heading to the airport.',
+       img: WC('Copley_Square,_Boston.jpg')},
+    ]
+  },
+];
+
+/* ── Colors ── */
+const COLORS = { nyc:'#3b82f6', boston:'#10b981', transit:'#8b5cf6', sidetrip:'#f59e0b', tech:'#06b6d4', harvard:'#c0392b' };
+
+function makeIcon(type, num) {
+  const c = COLORS[type] || '#888';
+  return L.divIcon({
+    html:`<div style="width:30px;height:30px;border-radius:50%;background:${c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.22);font-family:-apple-system,sans-serif">${num}</div>`,
+    className:'', iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-16]
+  });
+}
+
+function makeSmallIcon(type) {
+  const c = COLORS[type] || '#888';
+  return L.divIcon({
+    html:`<div style="width:18px;height:18px;border-radius:50%;background:${c};border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.2)"></div>`,
+    className:'', iconSize:[18,18], iconAnchor:[9,9], popupAnchor:[0,-10]
+  });
+}
+
+/* ── Map init ── */
+let map, activeMarkers = [], activeLine = null, activeDay = null;
+
+function initMap() {
+  map = L.map('map', { zoomControl:true }).setView([41.5, -71.0], 7);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:'© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom:19
+  }).addTo(map);
+}
+
+function clearMap() {
+  activeMarkers.forEach(m => map.removeLayer(m));
+  activeMarkers = [];
+  if (activeLine) { map.removeLayer(activeLine); activeLine = null; }
+}
+
+/* ── Hover image tooltip ── */
+const imgTip = document.getElementById('img-tip');
+const imgEl  = document.getElementById('img-tip-img');
+const imgFB  = document.getElementById('img-tip-fallback');
+
+document.addEventListener('mousemove', e => {
+  if (imgTip.style.display !== 'block') return;
+  let x = e.clientX + 18, y = e.clientY - 90;
+  if (x + 240 > window.innerWidth)  x = e.clientX - 248;
+  if (y < 8) y = e.clientY + 18;
+  if (y + 220 > window.innerHeight) y = window.innerHeight - 224;
+  imgTip.style.left = x + 'px';
+  imgTip.style.top  = y + 'px';
+});
+
+function attachHover(marker, spot, dayLabel) {
+  marker.on('mouseover', function() {
+    document.getElementById('img-tip-name').textContent = spot.name;
+    document.getElementById('img-tip-dur').textContent  = '⏱ ' + spot.dur;
+    document.getElementById('img-tip-day').textContent  = dayLabel;
+
+    imgFB.style.display  = 'none';
+    imgEl.style.display  = 'block';
+    imgEl.src = spot.img || '';
+
+    imgEl.onerror = function() {
+      imgEl.style.display = 'none';
+      imgFB.style.display = 'flex';
+      imgFB.textContent   = spot.name;
+    };
+
+    imgTip.style.display = 'block';
+  });
+  marker.on('mouseout', function() {
+    imgTip.style.display = 'none';
+  });
+}
+
+/* ── Show a single day ── */
+function showDay(dayId) {
+  clearMap();
+  activeDay = dayId;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.toggle('active', parseInt(b.dataset.id) === dayId));
+  document.getElementById('all-btn').classList.remove('active');
+
+  const day = DAYS.find(d => d.id === dayId);
+  const lls = [];
+
+  day.spots.forEach((spot, i) => {
+    const ll = [spot.lat, spot.lng];
+    lls.push(ll);
+    const warn = spot.warn ? '<div class="pu-warn">⚠ Verify pricing & hours before visiting</div>' : '';
+    const m = L.marker(ll, { icon: makeIcon(day.type, i + 1) })
+      .bindPopup(`<div class="pu"><div class="pu-name">${spot.name}</div><div class="pu-meta">⏱ ${spot.dur}</div><div class="pu-tip">${spot.tip}</div>${warn}</div>`)
+      .addTo(map);
+    attachHover(m, spot, day.label + ' · ' + day.city);
+    activeMarkers.push(m);
+  });
+
+  if (lls.length > 1) {
+    activeLine = L.polyline(lls, { color: COLORS[day.type] || '#888', weight:2.5, dashArray:'7,5', opacity:.65 }).addTo(map);
+  }
+
+  map.fitBounds(L.latLngBounds(lls), { padding:[50,50], maxZoom:15 });
+  showInfoPanel(day);
+}
+
+/* ── Show all days ── */
+function showAll() {
+  clearMap();
+  activeDay = null;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('all-btn').classList.add('active');
+  closeInfoPanel();
+
+  const allLls = [];
+  DAYS.forEach(day => {
+    day.spots.forEach(spot => {
+      const ll = [spot.lat, spot.lng];
+      allLls.push(ll);
+      const warn = spot.warn ? '<div class="pu-warn">⚠ Verify pricing & hours before visiting</div>' : '';
+      const m = L.marker(ll, { icon: makeSmallIcon(day.type) })
+        .bindPopup(`<div class="pu"><div class="pu-name">${spot.name}</div><div class="pu-meta">${day.label} · ${day.city} · ⏱ ${spot.dur}</div><div class="pu-tip">${spot.tip}</div>${warn}</div>`)
+        .addTo(map);
+      attachHover(m, spot, day.label + ' · ' + day.city);
+      activeMarkers.push(m);
+    });
+  });
+
+  map.fitBounds(L.latLngBounds(allLls), { padding:[30,30] });
+}
+
+/* ── Info panel ── */
+function showInfoPanel(day) {
+  const panel = document.getElementById('info-panel');
+  document.getElementById('ip-day').textContent   = day.label;
+  document.getElementById('ip-title').textContent = day.theme;
+  document.getElementById('ip-city').textContent  = '📍 ' + day.city;
+  document.getElementById('ip-spots').innerHTML = day.spots.map(s =>
+    `<li><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${COLORS[day.type]||'#888'};flex-shrink:0;margin-right:6px;margin-top:2px"></span>${s.name}</li>`
+  ).join('');
+  panel.style.display = 'block';
+}
+
+function closeInfoPanel() {
+  document.getElementById('info-panel').style.display = 'none';
+}
+
+/* ── Build sidebar ── */
+function buildSidebar() {
+  const tabs = document.getElementById('tabs');
+  DAYS.forEach(day => {
+    const btn = document.createElement('button');
+    btn.className   = 'day-btn';
+    btn.dataset.id  = day.id;
+    btn.innerHTML = `
+      <div class="dnum dnum-${day.type}">${day.id}</div>
+      <div class="dinfo">
+        <div class="dcity">${day.city}</div>
+        <div class="dtheme">${day.theme}</div>
+      </div>
+      <div class="dcount">${day.spots.length}</div>`;
+    btn.onclick = () => showDay(day.id);
+    tabs.appendChild(btn);
+  });
+}
+
+/* ── Boot ── */
+buildSidebar();
+initMap();
+showAll();
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NYC · Boston 12-Day Itinerary</title>
+<title>NYC · Boston 10-Day Itinerary — Aug 26–Sep 4, 2026</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -122,8 +122,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 <div id="app">
   <div id="hd">
     <div id="hd-left">
-      <h1>NYC · Boston 12-Day Itinerary</h1>
-      <div class="sub">Finance · Tech · Spectacular · MIT · Harvard &nbsp;—&nbsp; hover markers for photos, click for details</div>
+      <h1>NYC · Boston 10-Day Itinerary — Aug 26 – Sep 4, 2026</h1>
+      <div class="sub">STARLUX F3AI5B &nbsp;·&nbsp; In JFK (via Phoenix) → Out BOS (via Seattle) &nbsp;—&nbsp; hover markers for photos, click for details</div>
     </div>
     <div class="legend">
       <div class="leg-item"><div class="leg-dot" style="background:#3b82f6"></div>New York</div>
@@ -138,7 +138,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
     <div id="sidebar">
       <div id="sidebar-hd">
         <button class="all-btn active" id="all-btn" onclick="showAll()">
-          🗺&nbsp; Overview — All 12 Days
+          🗺&nbsp; Overview — All 10 Days
         </button>
       </div>
       <div id="tabs"></div>
@@ -174,8 +174,11 @@ const WC = name => `https://commons.wikimedia.org/wiki/Special:FilePath/${encode
 
 const DAYS = [
   {
-    id:1, type:'nyc', label:'Day 1', city:'New York City', theme:'Arrival · Spectacle',
+    id:1, type:'nyc', label:'Day 1 · Aug 26 (Wed)', city:'New York City · Arrival Day', theme:'Arrival · Spectacle',
     spots:[
+      {name:'✈ Arrive JFK 06:00 — JX026 + AA1587 (via Phoenix)', lat:40.6413, lng:-73.7781, dur:'—',
+       tip:'STARLUX JX026 dep TPE Aug 25 20:10 → PHX 18:10, connect AA1587 dep PHX 22:10 → arrive JFK Aug 26 06:00. Early morning landing — take the AirTrain + subway (or a cab) into Manhattan, drop bags, and ease into a light first day to beat jet lag.',
+       img: WC('John_F._Kennedy_International_Airport_Terminal_4.jpg')},
       {name:'Times Square', lat:40.7580, lng:-73.9855, dur:'1–2 hrs',
        tip:'Best at dusk when neon is at full glory. Hell\'s Kitchen nearby is great for dinner.',
        img: WC('New_york_times_square-terabass.jpg')},
@@ -188,7 +191,7 @@ const DAYS = [
     ]
   },
   {
-    id:2, type:'nyc', label:'Day 2', city:'New York City', theme:'Financial Heart',
+    id:2, type:'nyc', label:'Day 2 · Aug 27 (Thu)', city:'New York City', theme:'Financial Heart',
     spots:[
       {name:'Wall Street', lat:40.7074, lng:-74.0113, dur:'30 min',
        tip:'Walk the most famous street in global finance. Federal Hall across from the NYSE is free to enter.',
@@ -208,7 +211,7 @@ const DAYS = [
     ]
   },
   {
-    id:3, type:'nyc', label:'Day 3', city:'New York City', theme:'Bridge · Skyline',
+    id:3, type:'nyc', label:'Day 3 · Aug 28 (Fri)', city:'New York City', theme:'Bridge · Skyline',
     spots:[
       {name:'Brooklyn Bridge', lat:40.7061, lng:-73.9969, dur:'45 min–1 hr',
        tip:'Walk Manhattan-side → Brooklyn (~1.1 miles). Go at sunrise or sunset for the best light and thinnest crowds.',
@@ -225,7 +228,7 @@ const DAYS = [
     ]
   },
   {
-    id:4, type:'nyc', label:'Day 4', city:'New York City', theme:'Liberty · Harbor',
+    id:4, type:'nyc', label:'Day 4 · Aug 29 (Sat)', city:'New York City', theme:'Liberty · Harbor',
     spots:[
       {name:'Battery Park', lat:40.7033, lng:-74.0170, dur:'30 min',
        tip:'Starting point for Statue of Liberty ferries. Arrive early to catch the first boat and beat the crowds.',
@@ -239,24 +242,7 @@ const DAYS = [
     ]
   },
   {
-    id:5, type:'nyc', label:'Day 5', city:'New York City', theme:'Culture · Art · Science',
-    spots:[
-      {name:'Central Park', lat:40.7851, lng:-73.9683, dur:'1.5 hrs',
-       tip:'843 acres of green in the heart of Manhattan. Start at Bethesda Fountain, walk to Bow Bridge for photos. Bike rental available.',
-       img: WC('USA-NYC-Central_Park.jpg')},
-      {name:'The Metropolitan Museum of Art', lat:40.7794, lng:-73.9632, dur:'2–3 hrs',
-       tip:'One of the world\'s great museums. Tickets ~$30. Focus on Egyptian Art, Arms & Armor, and the Roof Garden for a curated experience.',
-       img: WC('Metropolitan_Museum_of_Art_(The_Met)_-_Central_Park,_NYC.jpg')},
-      {name:'Top of the Rock (Rockefeller Center)', lat:40.7587, lng:-73.9787, dur:'1 hr',
-       tip:'Open-air platform with Empire State Building in the frame — a view you can\'t get from ESB itself. Tickets ~$40. Verify pricing.',
-       img: WC('30_Rock_from_Top.jpg')},
-      {name:'MoMA', lat:40.7614, lng:-73.9776, dur:'1.5 hrs',
-       tip:'Van Gogh\'s Starry Night, Warhol, and cutting-edge contemporary tech art. Tickets ~$30. Less crowded on weekday afternoons.',
-       img: WC('MoMA_NYC.jpg')},
-    ]
-  },
-  {
-    id:6, type:'transit', label:'Day 6', city:'NYC → Boston', theme:'Transit Day · Seaport',
+    id:5, type:'transit', label:'Day 5 · Aug 30 (Sun)', city:'NYC → Boston', theme:'Transit Day · Seaport',
     spots:[
       {name:'The High Line', lat:40.7480, lng:-74.0048, dur:'1 hr',
        tip:'Elevated park built on a disused 1930s freight rail line — one of NYC\'s most creative urban renewal projects. Free.',
@@ -273,7 +259,7 @@ const DAYS = [
     ]
   },
   {
-    id:7, type:'tech', label:'Day 7', city:'Cambridge — MIT', theme:'MIT Full Day',
+    id:6, type:'tech', label:'Day 6 · Aug 31 (Mon)', city:'Cambridge — MIT', theme:'MIT Full Day',
     spots:[
       {name:'MIT Stata Center', lat:42.3620, lng:-71.0897, dur:'45 min',
        tip:'Frank Gehry\'s wildly deconstructivist building, home to CSAIL (AI Lab) and EECS. Walk the maze-like interior — it\'s intentionally disorienting.',
@@ -293,7 +279,7 @@ const DAYS = [
     ]
   },
   {
-    id:8, type:'harvard', label:'Day 8', city:'Cambridge — Harvard', theme:'Harvard Full Day',
+    id:7, type:'harvard', label:'Day 7 · Sep 1 (Tue)', city:'Cambridge — Harvard', theme:'Harvard Full Day',
     spots:[
       {name:'Harvard Yard', lat:42.3770, lng:-71.1167, dur:'1 hr',
        tip:'The historic heart of America\'s oldest university (1636). John Harvard statue, red-brick dormitories, centuries of tradition. Free and open to the public.',
@@ -313,7 +299,7 @@ const DAYS = [
     ]
   },
   {
-    id:9, type:'boston', label:'Day 9', city:'Boston', theme:'History & Finance Roots',
+    id:8, type:'boston', label:'Day 8 · Sep 2 (Wed)', city:'Boston', theme:'History & Finance Roots',
     spots:[
       {name:'Boston Common', lat:42.3554, lng:-71.0655, dur:'30 min',
        tip:'Oldest public park in the US (1634). Freedom Trail start point. Central Fountain is a classic photo spot. Free.',
@@ -336,24 +322,7 @@ const DAYS = [
     ]
   },
   {
-    id:10, type:'sidetrip', label:'Day 10', city:'Salem (Day Trip, ~30 min)', theme:'Witch Trials · Novel History',
-    spots:[
-      {name:'Salem Witch Museum', lat:42.5240, lng:-70.8974, dur:'1.5 hrs',
-       tip:'Dramatic recreation of the 1692 witch trial hysteria — a genuinely strange and fascinating chapter of American history. Tickets ~$17. Verify.',
-       img: WC('Salem_Witch_Museum.jpg')},
-      {name:'Peabody Essex Museum', lat:42.5208, lng:-70.8969, dur:'1.5 hrs',
-       tip:'One of the oldest continuously operating museums in the US. Maritime trade, Asian art, and a transplanted Chinese house inside. Tickets ~$28. Verify.',
-       img: WC('PeabodyEssexMuseum.jpg')},
-      {name:'Salem Heritage Trail', lat:42.5195, lng:-70.8967, dur:'1 hr',
-       tip:'Follow the red line through downtown Salem, passing all key sites from the witch trial era. Free and self-guided.',
-       img: WC('Salem_Heritage_Trail.jpg')},
-      {name:'Derby Wharf', lat:42.5206, lng:-70.8889, dur:'45 min',
-       tip:'18th-century trade hub, now a National Historic Site. Tall ships docked here. Great harbor walk, free.',
-       img: WC('Salem_Maritime_NHS_Derby_Wharf.jpg')},
-    ]
-  },
-  {
-    id:11, type:'sidetrip', label:'Day 11', city:'Newport, RI (Day Trip, ~1 hr)', theme:'Gilded Age · Spectacular Mansions',
+    id:9, type:'sidetrip', label:'Day 9 · Sep 3 (Thu)', city:'Newport, RI (Day Trip, ~1.5 hr)', theme:'Gilded Age · Spectacular Mansions',
     spots:[
       {name:'The Breakers', lat:41.4754, lng:-71.2999, dur:'2 hrs',
        tip:'Vanderbilt family\'s 70-room Italian Renaissance summer palace (1895). The most spectacular Gilded Age mansion open to the public. Tickets ~$26–35. Verify.',
@@ -370,7 +339,7 @@ const DAYS = [
     ]
   },
   {
-    id:12, type:'boston', label:'Day 12', city:'Boston', theme:'Finale · Departure',
+    id:10, type:'boston', label:'Day 10 · Sep 4 (Fri)', city:'Boston · Departure Day', theme:'Finale · Departure',
     spots:[
       {name:'Prudential Skywalk Observatory', lat:42.3476, lng:-71.0822, dur:'1 hr',
        tip:'360° panorama from 50 floors up — includes Charles River, Cambridge, and Boston Harbor. Best skyline shot in the city. Tickets ~$21. Verify.',
@@ -384,6 +353,9 @@ const DAYS = [
       {name:'Copley Square', lat:42.3496, lng:-71.0779, dur:'30 min',
        tip:'Boston Marathon finish line. Surrounded by Trinity Church and the BPL. A perfect final walk before heading to the airport.',
        img: WC('Copley_Square,_Boston.jpg')},
+      {name:'✈ Depart BOS 19:59 — AS306 + JX031 (via Seattle)', lat:42.3656, lng:-71.0096, dur:'—',
+       tip:'Head to Logan (BOS) by ~17:00. Alaska AS306 dep BOS Sep 4 19:59 → Seattle 23:12, then overnight connection STARLUX JX031 dep SEA Sep 5 01:15 → arrive Taipei Sep 6 04:55. Short ~2 hr layover in Seattle, so don\'t check bags too casually — confirm they\'re tagged through to TPE.',
+       img: WC('Logan_International_Airport_(Boston).jpg')},
     ]
   },
 ];

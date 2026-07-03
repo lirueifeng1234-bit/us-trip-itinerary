@@ -116,29 +116,70 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
   #map-wrap{flex:1;min-height:300px}
   #info-panel,#img-tip{display:none!important}
 }
+
+/* ── Flight details button + modal ── */
+#flt-btn{width:100%;border:none;background:#1c2b4a;color:#fff;text-align:left;padding:.55rem .7rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:.5rem;margin-top:.35rem;transition:background .12s}
+#flt-btn:hover{background:#28406e}
+#flt-overlay{position:fixed;inset:0;background:rgba(18,18,24,.55);z-index:1000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2.2rem 1rem;-webkit-overflow-scrolling:touch}
+#flt-overlay.open{display:flex}
+#flt-modal{background:#f7f6f3;width:100%;max-width:720px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.32);overflow:hidden;margin:auto}
+.flt-hd{background:linear-gradient(135deg,#1c2b4a,#33507f);color:#fff;padding:1.05rem 1.35rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.flt-hd h2{font-size:1.02rem;font-weight:700;letter-spacing:-.01em}
+.flt-hd .pnr{font-size:.71rem;opacity:.9;margin-top:.3rem;line-height:1.5}
+.flt-close{border:none;background:rgba(255,255,255,.16);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;flex-shrink:0;line-height:1}
+.flt-close:hover{background:rgba(255,255,255,.32)}
+.flt-body{padding:1.05rem 1.15rem 1.35rem}
+.flt-leg-hd{font-size:.9rem;font-weight:700;color:#1c2b4a;margin:1rem 0 .15rem;display:flex;align-items:center;gap:.45rem}
+.flt-leg-hd:first-child{margin-top:0}
+.flt-route{font-size:.73rem;color:#777;margin-bottom:.55rem}
+.flt-seg{background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:.75rem .9rem;margin-bottom:.45rem}
+.flt-seg-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.55rem;gap:.5rem}
+.flt-no{font-size:.82rem;font-weight:700;color:#1c2b4a}
+.flt-air{font-size:.67rem;color:#999;text-align:right}
+.flt-grid{display:flex;align-items:center;gap:.5rem}
+.flt-pt{flex:1;min-width:0}
+.flt-pt.r{text-align:right}
+.flt-time{font-size:1.12rem;font-weight:700;color:#1c1c1e;line-height:1}
+.flt-date{font-size:.65rem;color:#999;margin-top:.22rem}
+.flt-air3{font-size:.8rem;font-weight:600;color:#333;margin-top:.18rem}
+.flt-term{font-size:.65rem;color:#c2622c;margin-top:.12rem}
+.flt-mid{text-align:center;color:#c3c1bb;font-size:.9rem;min-width:74px}
+.flt-mid .dur{display:block;font-size:.66rem;color:#777;font-weight:600;margin-top:.1rem}
+.flt-meta{font-size:.65rem;color:#999;margin-top:.55rem;border-top:1px dashed #ece9e3;padding-top:.42rem}
+.flt-layover{font-size:.7rem;color:#8a6d3b;background:#fbf4e6;border:1px solid #f0e3c4;border-radius:8px;padding:.4rem .65rem;margin:0 0 .45rem;text-align:center}
+.flt-layover.tight{color:#a13b2a;background:#fbeae6;border-color:#f0c9c0}
+.flt-notes{background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:.72rem .95rem;margin-top:.7rem;font-size:.7rem;color:#555;line-height:1.75}
+.flt-notes b{color:#1c2b4a}
+@media(max-width:640px){
+  .flt-time{font-size:1rem}
+  #flt-overlay{padding:1rem .6rem}
+}
 </style>
 </head>
 <body>
 <div id="app">
   <div id="hd">
     <div id="hd-left">
-      <h1>NYC · Boston 10-Day Itinerary — Aug 26 – Sep 4, 2026</h1>
-      <div class="sub">STARLUX F3AI5B &nbsp;·&nbsp; In JFK (via Phoenix) → Out BOS (via Seattle) &nbsp;—&nbsp; hover markers for photos, click for details</div>
+      <h1>紐約 · 波士頓 10 天行程　NYC · Boston 10-Day &nbsp;|&nbsp; 2026/8/26 – 9/4</h1>
+      <div class="sub">星宇 STARLUX ✈ F3AI5B &nbsp;·&nbsp; 紐約 JFK 進（經鳳凰城）→ 波士頓 BOS 出（經西雅圖）&nbsp;—&nbsp; 點左側 <b>航班詳情</b>看完整機票 · hover 看照片、click 看細節</div>
     </div>
     <div class="legend">
-      <div class="leg-item"><div class="leg-dot" style="background:#3b82f6"></div>New York</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#06b6d4"></div>MIT Day</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#c0392b"></div>Harvard Day</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#10b981"></div>Boston</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div>Transit</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div>Day Trip</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#3b82f6"></div>紐約 New York</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#06b6d4"></div>MIT 日</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#c0392b"></div>哈佛 Harvard</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#10b981"></div>波士頓 Boston</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div>轉場 Transit</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div>一日遊 Day Trip</div>
     </div>
   </div>
   <div id="body">
     <div id="sidebar">
       <div id="sidebar-hd">
         <button class="all-btn active" id="all-btn" onclick="showAll()">
-          🗺&nbsp; Overview — All 10 Days
+          🗺&nbsp; 總覽 Overview — 全部 10 天
+        </button>
+        <button id="flt-btn" onclick="openFlights()">
+          ✈️&nbsp; 航班詳情 Flight Details — F3AI5B
         </button>
       </div>
       <div id="tabs"></div>
@@ -152,6 +193,137 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
         <div class="ip-city" id="ip-city"></div>
         <ul class="ip-spots" id="ip-spots"></ul>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Flight details modal -->
+<div id="flt-overlay" onclick="if(event.target===this)closeFlights()">
+  <div id="flt-modal">
+    <div class="flt-hd">
+      <div>
+        <h2>✈️ 航班詳情　Flight Itinerary</h2>
+        <div class="pnr">星宇航空 STARLUX ｜ 訂位代號 PNR <b>F3AI5B</b> ｜ 乘客 Passengers: RUEIFONG LI · TZ HSUAN YANG（2 人）</div>
+      </div>
+      <button class="flt-close" onclick="closeFlights()">✕</button>
+    </div>
+    <div class="flt-body">
+
+      <!-- OUTBOUND -->
+      <div class="flt-leg-hd">🛫 去程 Outbound ｜ 台北 → 紐約</div>
+      <div class="flt-route">TPE 台北 → PHX 鳳凰城 → JFK 紐約 ｜ 全程約 21 小時 50 分 ｜ 1 次轉機（鳳凰城）</div>
+
+      <div class="flt-seg">
+        <div class="flt-seg-top">
+          <span class="flt-no">JX026 · 星宇航空 STARLUX</span>
+          <span class="flt-air">Airbus A350-1000</span>
+        </div>
+        <div class="flt-grid">
+          <div class="flt-pt">
+            <div class="flt-time">20:10</div>
+            <div class="flt-date">8/25 (二) 週二</div>
+            <div class="flt-air3">TPE 台北 桃園</div>
+            <div class="flt-term">第 2 航廈 Terminal 2</div>
+          </div>
+          <div class="flt-mid">✈<span class="dur">13h 00m</span></div>
+          <div class="flt-pt r">
+            <div class="flt-time">18:10</div>
+            <div class="flt-date">8/25 (二) 當地</div>
+            <div class="flt-air3">PHX 鳳凰城</div>
+            <div class="flt-term">Terminal 4</div>
+          </div>
+        </div>
+        <div class="flt-meta">飛行時間 13h ｜ 碳排 740 kg CO₂e ｜ 台美時差 −15h，落地仍是同日下午</div>
+      </div>
+
+      <div class="flt-layover">🔄 轉機 Layover ＠ 鳳凰城 PHX ｜ 4h 00m ｜ 同一航廈 Terminal 4，不需換航廈</div>
+
+      <div class="flt-seg">
+        <div class="flt-seg-top">
+          <span class="flt-no">AA1587 · 美國航空 American Airlines</span>
+          <span class="flt-air">Airbus A321neo</span>
+        </div>
+        <div class="flt-grid">
+          <div class="flt-pt">
+            <div class="flt-time">22:10</div>
+            <div class="flt-date">8/25 (二)</div>
+            <div class="flt-air3">PHX 鳳凰城</div>
+            <div class="flt-term">Terminal 4</div>
+          </div>
+          <div class="flt-mid">✈<span class="dur">4h 50m</span></div>
+          <div class="flt-pt r">
+            <div class="flt-time">06:00</div>
+            <div class="flt-date">8/26 (三) 抵達</div>
+            <div class="flt-air3">JFK 紐約</div>
+            <div class="flt-term">Terminal 8</div>
+          </div>
+        </div>
+        <div class="flt-meta">飛行時間 4h50m ｜ 碳排 231 kg CO₂e ｜ 美國國內段（美航營運）｜ 清晨 6 點抵達 JFK</div>
+      </div>
+
+      <!-- RETURN -->
+      <div class="flt-leg-hd">🛬 回程 Return ｜ 波士頓 → 台北</div>
+      <div class="flt-route">BOS 波士頓 → SEA 西雅圖 → TPE 台北 ｜ 全程約 20 小時 56 分 ｜ 1 次轉機（西雅圖，過夜轉機）</div>
+
+      <div class="flt-seg">
+        <div class="flt-seg-top">
+          <span class="flt-no">AS306 · 阿拉斯加航空 Alaska</span>
+          <span class="flt-air">Boeing 737 MAX 9</span>
+        </div>
+        <div class="flt-grid">
+          <div class="flt-pt">
+            <div class="flt-time">19:59</div>
+            <div class="flt-date">9/4 (五) 週五</div>
+            <div class="flt-air3">BOS 波士頓</div>
+            <div class="flt-term">Terminal B</div>
+          </div>
+          <div class="flt-mid">✈<span class="dur">6h 13m</span></div>
+          <div class="flt-pt r">
+            <div class="flt-time">23:12</div>
+            <div class="flt-date">9/4 (五) 當地</div>
+            <div class="flt-air3">SEA 西雅圖</div>
+            <div class="flt-term">單一航廈 Main Terminal</div>
+          </div>
+        </div>
+        <div class="flt-meta">飛行時間 6h13m ｜ 碳排 257 kg CO₂e ｜ 美國國內段（阿拉斯加航空營運）｜ 傍晚離開波士頓</div>
+      </div>
+
+      <div class="flt-layover tight">⚠️ 轉機 Layover ＠ 西雅圖 SEA ｜ 僅 2h 03m ｜ 過夜、時間很短！行李務必掛到底 TPE，落地後直接前往下一班登機門</div>
+
+      <div class="flt-seg">
+        <div class="flt-seg-top">
+          <span class="flt-no">JX031 · 星宇航空 STARLUX</span>
+          <span class="flt-air">Airbus A350-900</span>
+        </div>
+        <div class="flt-grid">
+          <div class="flt-pt">
+            <div class="flt-time">01:15</div>
+            <div class="flt-date">9/5 (六) 週六</div>
+            <div class="flt-air3">SEA 西雅圖</div>
+            <div class="flt-term">單一航廈 Main Terminal</div>
+          </div>
+          <div class="flt-mid">✈<span class="dur">12h 40m</span></div>
+          <div class="flt-pt r">
+            <div class="flt-time">04:55</div>
+            <div class="flt-date">9/6 (日) 抵達 +2 天</div>
+            <div class="flt-air3">TPE 台北 桃園</div>
+            <div class="flt-term">第 2 航廈 Terminal 2</div>
+          </div>
+        </div>
+        <div class="flt-meta">飛行時間 12h40m ｜ 碳排 698 kg CO₂e ｜ 跨換日線，9/5 凌晨出發、9/6 清晨抵台</div>
+      </div>
+
+      <div class="flt-notes">
+        <b>📋 重要提醒 Notes</b><br>
+        • <b>登機口 Gate</b>：訂位階段尚未指定，請於出發當日在機場航班看板或 STARLUX App 查詢。<br>
+        • <b>航廈 Terminal</b>：以登機證為準（上表為訂位資料，PHX 去回同 T4、SEA 為單一航廈）。<br>
+        • <b>報到 Check-in</b>：TPE 國際線建議提前 3 小時；西雅圖轉機僅 2 小時，動作要快。<br>
+        • <b>行李 Baggage</b>：務必確認直掛到底（TPE→JFK、BOS→TPE），額度以 STARLUX 規定為準。<br>
+        • <b>座位／餐點</b>：可用 STARLUX App（COSMILE 會員登入 F3AI5B）預選管理。<br>
+        • <b>訂單金額 Total</b>：TWD 75,136。<br>
+        • <b>時差 Time zones</b>：TPE UTC+8｜PHX UTC−7（不調夏令）｜JFK/BOS UTC−4｜SEA UTC−7。
+      </div>
+
     </div>
   </div>
 </div>
@@ -174,10 +346,10 @@ const WC = name => `https://commons.wikimedia.org/wiki/Special:FilePath/${encode
 
 const DAYS = [
   {
-    id:1, type:'nyc', label:'Day 1 · Aug 26 (Wed)', city:'New York City · Arrival Day', theme:'Arrival · Spectacle',
+    id:1, type:'nyc', label:'Day 1 · Aug 26 (Wed)', city:'紐約 New York · 抵達日', theme:'抵達 · 都市奇景 Arrival',
     spots:[
-      {name:'✈ Arrive JFK 06:00 — JX026 + AA1587 (via Phoenix)', lat:40.6413, lng:-73.7781, dur:'—',
-       tip:'STARLUX JX026 dep TPE Aug 25 20:10 → PHX 18:10, connect AA1587 dep PHX 22:10 → arrive JFK Aug 26 06:00. Early morning landing — take the AirTrain + subway (or a cab) into Manhattan, drop bags, and ease into a light first day to beat jet lag.',
+      {name:'✈ 抵達 JFK 06:00 — JX026 + AA1587（經鳳凰城 Phoenix）', lat:40.6413, lng:-73.7781, dur:'—',
+       tip:'星宇 JX026 台北 8/25 20:10 → 鳳凰城 18:10，轉 AA1587 鳳凰城 22:10 → 8/26 06:00 抵達紐約 JFK 第8航廈。清晨落地——搭 AirTrain 轉地鐵（或計程車）進曼哈頓，放行李，第一天排輕鬆行程調時差。完整航班點左側「航班詳情」。',
        img: WC('John_F._Kennedy_International_Airport_Terminal_4.jpg')},
       {name:'Times Square', lat:40.7580, lng:-73.9855, dur:'1–2 hrs',
        tip:'Best at dusk when neon is at full glory. Hell\'s Kitchen nearby is great for dinner.',
@@ -191,7 +363,7 @@ const DAYS = [
     ]
   },
   {
-    id:2, type:'nyc', label:'Day 2 · Aug 27 (Thu)', city:'New York City', theme:'Financial Heart',
+    id:2, type:'nyc', label:'Day 2 · Aug 27 (Thu)', city:'紐約 New York', theme:'金融中心 Financial Heart',
     spots:[
       {name:'Wall Street', lat:40.7074, lng:-74.0113, dur:'30 min',
        tip:'Walk the most famous street in global finance. Federal Hall across from the NYSE is free to enter.',
@@ -211,7 +383,7 @@ const DAYS = [
     ]
   },
   {
-    id:3, type:'nyc', label:'Day 3 · Aug 28 (Fri)', city:'New York City', theme:'Bridge · Skyline',
+    id:3, type:'nyc', label:'Day 3 · Aug 28 (Fri)', city:'紐約 New York', theme:'大橋 · 天際線 Skyline',
     spots:[
       {name:'Brooklyn Bridge', lat:40.7061, lng:-73.9969, dur:'45 min–1 hr',
        tip:'Walk Manhattan-side → Brooklyn (~1.1 miles). Go at sunrise or sunset for the best light and thinnest crowds.',
@@ -228,7 +400,7 @@ const DAYS = [
     ]
   },
   {
-    id:4, type:'nyc', label:'Day 4 · Aug 29 (Sat)', city:'New York City', theme:'Liberty · Harbor',
+    id:4, type:'nyc', label:'Day 4 · Aug 29 (Sat)', city:'紐約 New York', theme:'自由女神 · 港灣 Liberty',
     spots:[
       {name:'Battery Park', lat:40.7033, lng:-74.0170, dur:'30 min',
        tip:'Starting point for Statue of Liberty ferries. Arrive early to catch the first boat and beat the crowds.',
@@ -242,7 +414,7 @@ const DAYS = [
     ]
   },
   {
-    id:5, type:'transit', label:'Day 5 · Aug 30 (Sun)', city:'NYC → Boston', theme:'Transit Day · Seaport',
+    id:5, type:'transit', label:'Day 5 · Aug 30 (Sun)', city:'紐約 → 波士頓 NYC→Boston', theme:'轉場日 · 海港區 Transit',
     spots:[
       {name:'The High Line', lat:40.7480, lng:-74.0048, dur:'1 hr',
        tip:'Elevated park built on a disused 1930s freight rail line — one of NYC\'s most creative urban renewal projects. Free.',
@@ -259,7 +431,7 @@ const DAYS = [
     ]
   },
   {
-    id:6, type:'tech', label:'Day 6 · Aug 31 (Mon)', city:'Cambridge — MIT', theme:'MIT Full Day',
+    id:6, type:'tech', label:'Day 6 · Aug 31 (Mon)', city:'劍橋 Cambridge — MIT', theme:'MIT 一日 Full Day',
     spots:[
       {name:'MIT Stata Center', lat:42.3620, lng:-71.0897, dur:'45 min',
        tip:'Frank Gehry\'s wildly deconstructivist building, home to CSAIL (AI Lab) and EECS. Walk the maze-like interior — it\'s intentionally disorienting.',
@@ -279,7 +451,7 @@ const DAYS = [
     ]
   },
   {
-    id:7, type:'harvard', label:'Day 7 · Sep 1 (Tue)', city:'Cambridge — Harvard', theme:'Harvard Full Day',
+    id:7, type:'harvard', label:'Day 7 · Sep 1 (Tue)', city:'劍橋 Cambridge — Harvard', theme:'哈佛 一日 Harvard',
     spots:[
       {name:'Harvard Yard', lat:42.3770, lng:-71.1167, dur:'1 hr',
        tip:'The historic heart of America\'s oldest university (1636). John Harvard statue, red-brick dormitories, centuries of tradition. Free and open to the public.',
@@ -299,7 +471,7 @@ const DAYS = [
     ]
   },
   {
-    id:8, type:'boston', label:'Day 8 · Sep 2 (Wed)', city:'Boston', theme:'History & Finance Roots',
+    id:8, type:'boston', label:'Day 8 · Sep 2 (Wed)', city:'波士頓 Boston', theme:'歷史 · 金融起源 History',
     spots:[
       {name:'Boston Common', lat:42.3554, lng:-71.0655, dur:'30 min',
        tip:'Oldest public park in the US (1634). Freedom Trail start point. Central Fountain is a classic photo spot. Free.',
@@ -322,7 +494,7 @@ const DAYS = [
     ]
   },
   {
-    id:9, type:'sidetrip', label:'Day 9 · Sep 3 (Thu)', city:'Newport, RI (Day Trip, ~1.5 hr)', theme:'Gilded Age · Spectacular Mansions',
+    id:9, type:'sidetrip', label:'Day 9 · Sep 3 (Thu)', city:'新港 Newport, RI（一日遊 ~1.5h）', theme:'鍍金時代 · 豪宅 Mansions',
     spots:[
       {name:'The Breakers', lat:41.4754, lng:-71.2999, dur:'2 hrs',
        tip:'Vanderbilt family\'s 70-room Italian Renaissance summer palace (1895). The most spectacular Gilded Age mansion open to the public. Tickets ~$26–35. Verify.',
@@ -339,7 +511,7 @@ const DAYS = [
     ]
   },
   {
-    id:10, type:'boston', label:'Day 10 · Sep 4 (Fri)', city:'Boston · Departure Day', theme:'Finale · Departure',
+    id:10, type:'boston', label:'Day 10 · Sep 4 (Fri)', city:'波士頓 Boston · 返程日', theme:'尾聲 · 返程 Departure',
     spots:[
       {name:'Prudential Skywalk Observatory', lat:42.3476, lng:-71.0822, dur:'1 hr',
        tip:'360° panorama from 50 floors up — includes Charles River, Cambridge, and Boston Harbor. Best skyline shot in the city. Tickets ~$21. Verify.',
@@ -353,8 +525,8 @@ const DAYS = [
       {name:'Copley Square', lat:42.3496, lng:-71.0779, dur:'30 min',
        tip:'Boston Marathon finish line. Surrounded by Trinity Church and the BPL. A perfect final walk before heading to the airport.',
        img: WC('Copley_Square,_Boston.jpg')},
-      {name:'✈ Depart BOS 19:59 — AS306 + JX031 (via Seattle)', lat:42.3656, lng:-71.0096, dur:'—',
-       tip:'Head to Logan (BOS) by ~17:00. Alaska AS306 dep BOS Sep 4 19:59 → Seattle 23:12, then overnight connection STARLUX JX031 dep SEA Sep 5 01:15 → arrive Taipei Sep 6 04:55. Short ~2 hr layover in Seattle, so don\'t check bags too casually — confirm they\'re tagged through to TPE.',
+      {name:'✈ 出發 BOS 19:59 — AS306 + JX031（經西雅圖 Seattle）', lat:42.3656, lng:-71.0096, dur:'—',
+       tip:'約 17:00 前抵達波士頓羅根機場（BOS，Terminal B）。阿拉斯加 AS306 波士頓 9/4 19:59 → 西雅圖 23:12，過夜轉星宇 JX031 西雅圖 9/5 01:15 → 9/6 04:55 抵台北。西雅圖轉機僅約 2 小時、很趕——行李務必掛到底 TPE。完整航班點左側「航班詳情」。',
        img: WC('Logan_International_Airport_(Boston).jpg')},
     ]
   },
@@ -503,6 +675,15 @@ function showInfoPanel(day) {
 function closeInfoPanel() {
   document.getElementById('info-panel').style.display = 'none';
 }
+
+/* ── Flight details modal ── */
+function openFlights() {
+  document.getElementById('flt-overlay').classList.add('open');
+}
+function closeFlights() {
+  document.getElementById('flt-overlay').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFlights(); });
 
 /* ── Build sidebar ── */
 function buildSidebar() {

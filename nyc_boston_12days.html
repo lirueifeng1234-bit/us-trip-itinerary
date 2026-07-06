@@ -161,9 +161,10 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
   <div id="hd">
     <div id="hd-left">
       <h1>紐約 · 波士頓 10 天行程　NYC · Boston 10-Day &nbsp;|&nbsp; 2026/8/26 – 9/4</h1>
-      <div class="sub">星宇 STARLUX ✈ F3AI5B &nbsp;·&nbsp; 紐約 JFK 進（經鳳凰城）→ 波士頓 BOS 出（經西雅圖）&nbsp;—&nbsp; 點左側 <b>航班詳情</b>看完整機票 · hover 看照片、click 看細節</div>
+      <div class="sub">星宇 STARLUX ✈ F3AI5B &nbsp;·&nbsp; 紐約 JFK 進（經鳳凰城）→ 波士頓 BOS 出（經西雅圖）&nbsp;·&nbsp; 🏨 紐約 4 晚住 <b>CIVILIAN Hotel</b>（中城西 W 48th St，8/26–8/30 退房）&nbsp;—&nbsp; 點左側 <b>航班詳情</b>看完整機票 · hover 看照片、click 看細節</div>
     </div>
     <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#e0457b"></div>🏨 住宿 Hotel</div>
       <div class="leg-item"><div class="leg-dot" style="background:#3b82f6"></div>紐約 New York</div>
       <div class="leg-item"><div class="leg-dot" style="background:#06b6d4"></div>MIT 日</div>
       <div class="leg-item"><div class="leg-dot" style="background:#c0392b"></div>哈佛 Harvard</div>
@@ -349,61 +350,73 @@ const DAYS = [
     id:1, type:'nyc', label:'Day 1 · Aug 26 (Wed)', city:'紐約 New York · 抵達日', theme:'抵達 · 都市奇景 Arrival',
     spots:[
       {name:'✈ 抵達 JFK 06:00 — JX026 + AA1587（經鳳凰城 Phoenix）', lat:40.6413, lng:-73.7781, dur:'—',
-       tip:'星宇 JX026 台北 8/25 20:10 → 鳳凰城 18:10，轉 AA1587 鳳凰城 22:10 → 8/26 06:00 抵達紐約 JFK 第8航廈。清晨落地——搭 AirTrain 轉地鐵（或計程車）進曼哈頓，放行李，第一天排輕鬆行程調時差。完整航班點左側「航班詳情」。',
+       tip:'星宇 JX026 台北 8/25 20:10 → 鳳凰城 18:10，轉 AA1587 鳳凰城 22:10 → 8/26 06:00 抵達紐約 JFK 第8航廈。清晨落地——搭 AirTrain 到 Jamaica 轉地鐵 E 線直達中城（約 60–75 分鐘），或計程車約 45 分。先到 CIVILIAN Hotel 寄放行李，第一天排飯店周邊的輕鬆行程調時差。完整航班點左側「航班詳情」。',
        img: WC('John_F._Kennedy_International_Airport_Terminal_4.jpg')},
-      {name:'Times Square', lat:40.7580, lng:-73.9855, dur:'1–2 hrs',
-       tip:'Best at dusk when neon is at full glory. Hell\'s Kitchen nearby is great for dinner.',
+      {name:'🏨 CIVILIAN Hotel — 寄放行李 Check-in', lat:40.76143, lng:-73.987451, dur:'住宿據點', hotel:true,
+       tip:'你紐約 4 晚的家（8/26–8/30 退房）。W 48th St，第 8～9 大道間。正式入住多在下午 3 點，但抵達後可先寄放行李。飯店就在時代廣場旁 5 分鐘、地鐵 A/C/E 與 1 線 50 St 站步行 3–5 分，動線最順的第一天就近玩。',
        img: WC('New_york_times_square-terabass.jpg')},
-      {name:'Edge Observation Deck', lat:40.7539, lng:-74.0022, dur:'1.5 hrs',
-       tip:'Highest outdoor sky deck in the Western Hemisphere — 100 floors, glass floor included. Tickets ~$38–50, book in advance. Verify before visiting.',
-       img: WC('Edge_(observation_deck)_11-10-2021.jpg')},
+      {name:'Times Square', lat:40.7580, lng:-73.9855, dur:'1–2 hrs',
+       tip:'離飯店步行僅約 5 分鐘。傍晚霓虹最盛時最美，周邊地獄廚房 Hell\'s Kitchen 餐廳林立，回飯店路上正好吃晚餐。',
+       img: WC('New_york_times_square-terabass.jpg')},
       {name:'The Vessel', lat:40.7536, lng:-74.0019, dur:'30 min',
-       tip:'Iconic 16-story spiral staircase sculpture at Hudson Yards. Free to view outside. Check current access status before visiting.',
+       tip:'哈德遜園區 Hudson Yards 的 16 層螺旋階梯地標。從飯店搭地鐵 7 號線一站到 34 St–Hudson Yards，或步行約 20 分。外觀免費觀賞，入內開放狀態請先確認。',
        img: WC('The_Vessel_(48082084821).jpg')},
+      {name:'Edge Observation Deck', lat:40.7539, lng:-74.0022, dur:'1.5 hrs',
+       tip:'西半球最高的戶外天空甲板——100 樓、含玻璃地板，就在 Vessel 旁。安排在黃昏上去看日落與曼哈頓夜景最值得，之後一站地鐵回飯店。門票約 $38–50，建議先訂。',
+       img: WC('Edge_(observation_deck)_11-10-2021.jpg')},
     ]
   },
   {
     id:2, type:'nyc', label:'Day 2 · Aug 27 (Thu)', city:'紐約 New York', theme:'金融中心 Financial Heart',
     spots:[
-      {name:'Wall Street', lat:40.7074, lng:-74.0113, dur:'30 min',
-       tip:'Walk the most famous street in global finance. Federal Hall across from the NYSE is free to enter.',
-       img: WC('Wall_Street_-_NYC.jpg')},
-      {name:'New York Stock Exchange', lat:40.7069, lng:-74.0089, dur:'20 min',
-       tip:'Exterior photo stop — interior not open to the public. Best angle from Broad St. The building dates to 1903.',
-       img: WC('New_York_Stock_Exchange.jpg')},
-      {name:'Charging Bull', lat:40.7056, lng:-74.0134, dur:'15 min',
-       tip:'Symbol of Wall Street optimism since 1989. Crowds are heavy mid-day — early morning gives you breathing room.',
-       img: WC('Charging_Bull_in_New_York_City.jpg')},
+      {name:'🏨 CIVILIAN Hotel — 出發 Start', lat:40.76143, lng:-73.987451, dur:'出發點', hotel:true,
+       tip:'從飯店走到 50 St 站搭地鐵 E 線直達 World Trade Center 站（約 20 分，不用轉車），今天由北往南一路走完金融區，傍晚原路搭 E 線回飯店。',
+       img: WC('New_york_times_square-terabass.jpg')},
       {name:'9/11 Memorial & Museum', lat:40.7115, lng:-74.0130, dur:'2–3 hrs',
-       tip:'Reflecting pools on the original tower footprints — profoundly moving. Museum tickets ~$33, memorial is free. Book ahead.',
+       tip:'地鐵 E 線 World Trade Center 站出站即到，當作今天第一站。雙塔原址的倒影池莊嚴動人。博物館門票約 $33、戶外紀念池免費，建議先訂票。',
        img: WC('National_September_11_Memorial_reflecting_pools.jpg')},
       {name:'One World Observatory', lat:40.7127, lng:-74.0134, dur:'1.5 hrs',
-       tip:'102nd floor views of all five boroughs. Sky Portal floor panel is a highlight. Tickets ~$40. Verify current pricing.',
+       tip:'就在紀念池旁，102 樓可眺望五大區。Sky Portal 玻璃地板是亮點。門票約 $40，看完接著往南走向華爾街。',
        img: WC('One_World_Trade_Center,_New_York.jpg')},
+      {name:'Wall Street', lat:40.7074, lng:-74.0113, dur:'30 min',
+       tip:'從世貿往南步行約 8 分。全球金融最著名的街道；證交所對面的 Federal Hall 免費入內參觀。',
+       img: WC('Wall_Street_-_NYC.jpg')},
+      {name:'New York Stock Exchange', lat:40.7069, lng:-74.0089, dur:'20 min',
+       tip:'華爾街旁，外觀拍照點——內部不開放。Broad St 角度最佳，建物建於 1903 年。',
+       img: WC('New_York_Stock_Exchange.jpg')},
+      {name:'Charging Bull', lat:40.7056, lng:-74.0134, dur:'15 min',
+       tip:'今天最南端一站，位於 Bowling Green。1989 年起的華爾街樂觀象徵。看完可就近搭地鐵回飯店，或散步到旁邊的砲台公園（Day 4 的起點）先探路。',
+       img: WC('Charging_Bull_in_New_York_City.jpg')},
     ]
   },
   {
     id:3, type:'nyc', label:'Day 3 · Aug 28 (Fri)', city:'紐約 New York', theme:'大橋 · 天際線 Skyline',
     spots:[
+      {name:'🏨 CIVILIAN Hotel — 出發 Start', lat:40.76143, lng:-73.987451, dur:'出發點', hotel:true,
+       tip:'從飯店走到 42 St–Port Authority 站搭 A/C 線南下到 High St 或 Fulton St（約 25 分），今天從曼哈頓端走橋過河到布魯克林，傍晚在濱海步道看夕陽後搭地鐵回飯店。',
+       img: WC('New_york_times_square-terabass.jpg')},
       {name:'Brooklyn Bridge', lat:40.7061, lng:-73.9969, dur:'45 min–1 hr',
-       tip:'Walk Manhattan-side → Brooklyn (~1.1 miles). Go at sunrise or sunset for the best light and thinnest crowds.',
+       tip:'由曼哈頓端往布魯克林走（約 1.1 英里）。當作今天第一站，上午光線好、人也較少，邊走邊拍天際線。',
        img: WC('Brooklyn_Bridge_Postdlf.jpg')},
       {name:'DUMBO', lat:40.7033, lng:-73.9888, dur:'1.5 hrs',
-       tip:'Washington St. framing the Manhattan Bridge is one of NYC\'s most photographed spots. Artsy cafés and galleries line the cobblestone streets.',
+       tip:'過橋後即抵。Washington St 框住曼哈頓大橋的畫面是紐約最熱門打卡點，鵝卵石街道旁盡是文青咖啡與藝廊。',
        img: WC('DUMBO,_Brooklyn_-_Washington_Street_with_Manhattan_Bridge.jpg')},
-      {name:'Brooklyn Heights Promenade', lat:40.6977, lng:-73.9997, dur:'1 hr',
-       tip:'Arguably the best panoramic view of the Manhattan skyline, especially golden hour. Free and uncrowded compared to observation decks.',
-       img: WC('BrooklynHeightsPromenade.JPG')},
       {name:'Time Out Market NY', lat:40.7030, lng:-73.9890, dur:'1 hr',
-       tip:'Curated food hall in DUMBO, featuring the best NYC restaurants under one roof. Great lunch stop.',
+       tip:'就在 DUMBO 濱海旁，集結紐約人氣餐廳的美食廣場，午餐在這裡解決最順。',
        img: WC('Time_Out_Market_New_York.jpg')},
+      {name:'Brooklyn Heights Promenade', lat:40.6977, lng:-73.9997, dur:'1 hr',
+       tip:'今天壓軸——公認眺望曼哈頓天際線最美的地方，黃昏金色時刻無敵，且免費、比觀景台清幽。看完由附近 2/3 線或 A/C 線回中城飯店。',
+       img: WC('BrooklynHeightsPromenade.JPG')},
     ]
   },
   {
     id:4, type:'nyc', label:'Day 4 · Aug 29 (Sat)', city:'紐約 New York', theme:'自由女神 · 港灣 Liberty',
     spots:[
+      {name:'🏨 CIVILIAN Hotel — 早點出發 Start early', lat:40.76143, lng:-73.987451, dur:'出發點', hotel:true,
+       tip:'今天要搭渡輪、宜早出發。從飯店走到 50 St 站搭 1 號線直達南端 South Ferry 站（約 25 分，不用轉車），出站即是砲台公園渡輪碼頭。週六人潮多，建議搭第一班船。',
+       img: WC('New_york_times_square-terabass.jpg')},
       {name:'Battery Park', lat:40.7033, lng:-74.0170, dur:'30 min',
-       tip:'Starting point for Statue of Liberty ferries. Arrive early to catch the first boat and beat the crowds.',
+       tip:'自由女神渡輪出發點，1 號線 South Ferry 站出站即到。早點到搭第一班船、避開人潮。',
        img: WC('Battery_Park_New_York.jpg')},
       {name:'Statue of Liberty', lat:40.6892, lng:-74.0445, dur:'2–3 hrs (incl. ferry)',
        tip:'America\'s most iconic landmark. Crown tickets sell out weeks ahead — book early on nps.gov. Pedestal is also impressive. Verify schedule.',
@@ -416,8 +429,11 @@ const DAYS = [
   {
     id:5, type:'transit', label:'Day 5 · Aug 30 (Sun)', city:'紐約 → 波士頓 NYC→Boston', theme:'轉場日 · 海港區 Transit',
     spots:[
+      {name:'🏨 CIVILIAN Hotel — 退房 Check-out', lat:40.76143, lng:-73.987451, dur:'退房日', hotel:true,
+       tip:'紐約最後一晚（8/29 住）今早退房。行李可先寄放櫃檯，輕裝去走 High Line；回程取行李後步行約 12 分（或一段地鐵）到 Penn Station 搭 Amtrak 前往波士頓。飯店到 Penn Station 只有約 15 條街，動線很順。',
+       img: WC('New_york_times_square-terabass.jpg')},
       {name:'The High Line', lat:40.7480, lng:-74.0048, dur:'1 hr',
-       tip:'Elevated park built on a disused 1930s freight rail line — one of NYC\'s most creative urban renewal projects. Free.',
+       tip:'由 1930 年代廢棄高架貨運鐵道改建的空中公園，紐約最具創意的都市更新之一，免費。北端入口距飯店僅約 10 分鐘、退房後散步剛好，南下走到 Chelsea 再折返 Penn Station。',
        img: WC('High_Line_NYC_spring_2014.jpg')},
       {name:'Penn Station — Amtrak Departure', lat:40.7506, lng:-73.9971, dur:'—',
        tip:'Take Amtrak Acela Express to Boston (3.5 hrs). Book early for best prices. Acela tickets vary widely by time.',
@@ -533,7 +549,7 @@ const DAYS = [
 ];
 
 /* ── Colors ── */
-const COLORS = { nyc:'#3b82f6', boston:'#10b981', transit:'#8b5cf6', sidetrip:'#f59e0b', tech:'#06b6d4', harvard:'#c0392b' };
+const COLORS = { nyc:'#3b82f6', boston:'#10b981', transit:'#8b5cf6', sidetrip:'#f59e0b', tech:'#06b6d4', harvard:'#c0392b', hotel:'#e0457b' };
 
 function makeIcon(type, num) {
   const c = COLORS[type] || '#888';
@@ -548,6 +564,22 @@ function makeSmallIcon(type) {
   return L.divIcon({
     html:`<div style="width:18px;height:18px;border-radius:50%;background:${c};border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.2)"></div>`,
     className:'', iconSize:[18,18], iconAnchor:[9,9], popupAnchor:[0,-10]
+  });
+}
+
+/* Hotel marker — distinct 🏨 pin so the base stands out on every NYC day */
+function makeHotelIcon() {
+  const c = COLORS.hotel;
+  return L.divIcon({
+    html:`<div style="width:34px;height:34px;border-radius:50%;background:${c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.3)">🏨</div>`,
+    className:'', iconSize:[34,34], iconAnchor:[17,17], popupAnchor:[0,-18]
+  });
+}
+function makeHotelSmallIcon() {
+  const c = COLORS.hotel;
+  return L.divIcon({
+    html:`<div style="width:22px;height:22px;border-radius:50%;background:${c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.28)">🏨</div>`,
+    className:'', iconSize:[22,22], iconAnchor:[11,11], popupAnchor:[0,-12]
   });
 }
 
@@ -620,7 +652,7 @@ function showDay(dayId) {
     const ll = [spot.lat, spot.lng];
     lls.push(ll);
     const warn = spot.warn ? '<div class="pu-warn">⚠ Verify pricing & hours before visiting</div>' : '';
-    const m = L.marker(ll, { icon: makeIcon(day.type, i + 1) })
+    const m = L.marker(ll, { icon: spot.hotel ? makeHotelIcon() : makeIcon(day.type, i + 1) })
       .bindPopup(`<div class="pu"><div class="pu-name">${spot.name}</div><div class="pu-meta">⏱ ${spot.dur}</div><div class="pu-tip">${spot.tip}</div>${warn}</div>`)
       .addTo(map);
     attachHover(m, spot, day.label + ' · ' + day.city);
@@ -649,7 +681,7 @@ function showAll() {
       const ll = [spot.lat, spot.lng];
       allLls.push(ll);
       const warn = spot.warn ? '<div class="pu-warn">⚠ Verify pricing & hours before visiting</div>' : '';
-      const m = L.marker(ll, { icon: makeSmallIcon(day.type) })
+      const m = L.marker(ll, { icon: spot.hotel ? makeHotelSmallIcon() : makeSmallIcon(day.type) })
         .bindPopup(`<div class="pu"><div class="pu-name">${spot.name}</div><div class="pu-meta">${day.label} · ${day.city} · ⏱ ${spot.dur}</div><div class="pu-tip">${spot.tip}</div>${warn}</div>`)
         .addTo(map);
       attachHover(m, spot, day.label + ' · ' + day.city);
@@ -667,7 +699,7 @@ function showInfoPanel(day) {
   document.getElementById('ip-title').textContent = day.theme;
   document.getElementById('ip-city').textContent  = '📍 ' + day.city;
   document.getElementById('ip-spots').innerHTML = day.spots.map(s =>
-    `<li><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${COLORS[day.type]||'#888'};flex-shrink:0;margin-right:6px;margin-top:2px"></span>${s.name}</li>`
+    `<li><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${s.hotel?COLORS.hotel:(COLORS[day.type]||'#888')};flex-shrink:0;margin-right:6px;margin-top:2px"></span>${s.name}</li>`
   ).join('');
   panel.style.display = 'block';
 }

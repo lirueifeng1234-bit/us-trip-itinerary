@@ -120,6 +120,34 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 /* ── Flight details button + modal ── */
 #flt-btn{width:100%;border:none;background:#1c2b4a;color:#fff;text-align:left;padding:.55rem .7rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:.5rem;margin-top:.35rem;transition:background .12s}
 #flt-btn:hover{background:#28406e}
+#food-btn{width:100%;border:none;background:#7a2e1e;color:#fff;text-align:left;padding:.55rem .7rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:.5rem;margin-top:.35rem;transition:background .12s}
+#food-btn:hover{background:#9a3d29}
+
+/* ── Restaurants modal ── */
+#food-overlay{position:fixed;inset:0;background:rgba(18,18,24,.55);z-index:1000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2.2rem 1rem;-webkit-overflow-scrolling:touch}
+#food-overlay.open{display:flex}
+#food-modal{background:#f7f6f3;width:100%;max-width:760px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.32);overflow:hidden;margin:auto}
+.food-hd{background:linear-gradient(135deg,#7a2e1e,#b3532f);color:#fff;padding:1.05rem 1.35rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.food-hd h2{font-size:1.02rem;font-weight:700;letter-spacing:-.01em}
+.food-hd .sub{font-size:.71rem;opacity:.92;margin-top:.3rem;line-height:1.5}
+.food-close{border:none;background:rgba(255,255,255,.16);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;flex-shrink:0;line-height:1}
+.food-close:hover{background:rgba(255,255,255,.32)}
+.food-body{padding:1rem 1.15rem 1.35rem}
+.food-city{font-size:.98rem;font-weight:800;color:#7a2e1e;margin:1.15rem 0 .1rem;display:flex;align-items:center;gap:.4rem}
+.food-city:first-child{margin-top:.2rem}
+.food-tier{margin-top:.7rem}
+.food-tier-hd{font-size:.8rem;font-weight:700;color:#fff;display:inline-block;padding:.2rem .6rem;border-radius:999px;margin-bottom:.5rem}
+.food-list{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.food-item{background:#fff;border:1px solid #e6e4df;border-radius:10px;padding:.55rem .7rem}
+.food-name{font-size:.8rem;font-weight:700;color:#1c1c1e;line-height:1.3}
+.food-area{font-size:.66rem;color:#b3532f;font-weight:600;margin:.15rem 0 .2rem}
+.food-note{font-size:.7rem;color:#555;line-height:1.5}
+.food-tip{background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:.72rem .95rem;margin-top:1rem;font-size:.7rem;color:#666;line-height:1.7}
+.food-tip b{color:#7a2e1e}
+@media(max-width:640px){
+  .food-list{grid-template-columns:1fr}
+  #food-overlay{padding:1rem .6rem}
+}
 #flt-overlay{position:fixed;inset:0;background:rgba(18,18,24,.55);z-index:1000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2.2rem 1rem;-webkit-overflow-scrolling:touch}
 #flt-overlay.open{display:flex}
 #flt-modal{background:#f7f6f3;width:100%;max-width:720px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.32);overflow:hidden;margin:auto}
@@ -166,8 +194,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
     <div class="legend">
       <div class="leg-item"><div class="leg-dot" style="background:#e0457b"></div>🏨 住宿 Hotel</div>
       <div class="leg-item"><div class="leg-dot" style="background:#3b82f6"></div>紐約 New York</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#06b6d4"></div>MIT 日</div>
-      <div class="leg-item"><div class="leg-dot" style="background:#c0392b"></div>哈佛 Harvard</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#06b6d4"></div>劍橋 Cambridge（MIT＋哈佛）</div>
       <div class="leg-item"><div class="leg-dot" style="background:#10b981"></div>波士頓 Boston</div>
       <div class="leg-item"><div class="leg-dot" style="background:#8b5cf6"></div>轉場 Transit</div>
       <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div>一日遊 Day Trip</div>
@@ -181,6 +208,9 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
         </button>
         <button id="flt-btn" onclick="openFlights()">
           ✈️&nbsp; 航班詳情 Flight Details — F3AI5B
+        </button>
+        <button id="food-btn" onclick="openFood()">
+          🍽️&nbsp; 美食推薦 Restaurants — 紐約 · 波士頓
         </button>
       </div>
       <div id="tabs"></div>
@@ -329,6 +359,20 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
   </div>
 </div>
 
+<!-- Restaurants modal -->
+<div id="food-overlay" onclick="if(event.target===this)closeFood()">
+  <div id="food-modal">
+    <div class="food-hd">
+      <div>
+        <h2>🍽️ 美食推薦　Famous Eats</h2>
+        <div class="sub">紐約 &amp; 波士頓超有名餐廳 · 依價位分類，臨時想吃再自己挑 · 不綁定哪一餐</div>
+      </div>
+      <button class="food-close" onclick="closeFood()">✕</button>
+    </div>
+    <div class="food-body" id="food-body"></div>
+  </div>
+</div>
+
 <!-- Hover image tooltip -->
 <div id="img-tip">
   <img id="img-tip-img" src="" alt="">
@@ -347,178 +391,202 @@ const WC = name => `https://commons.wikimedia.org/wiki/Special:FilePath/${encode
 
 const DAYS = [
   {
-    id:1, type:'nyc', label:'Day 1 · Aug 26 (Wed)', city:'紐約 New York · 抵達日', theme:'抵達 · 都市奇景 Arrival',
+    id:1, type:'nyc', label:'Day 1 · Aug 26 (Wed)', city:'紐約 New York · 抵達日', theme:'抵達 · 中城地標＋第五大道 Midtown',
     spots:[
       {name:'✈ 抵達 JFK 06:00 — JX026 + AA1587（經鳳凰城 Phoenix）', lat:40.6413, lng:-73.7781, dur:'—',
-       tip:'星宇 JX026 台北 8/25 20:10 → 鳳凰城 18:10，轉 AA1587 鳳凰城 22:10 → 8/26 06:00 抵達紐約 JFK 第8航廈。清晨落地——搭 AirTrain 到 Jamaica 轉地鐵 E 線直達中城（約 60–75 分鐘），或計程車約 45 分。先到 CIVILIAN Hotel 寄放行李，第一天排飯店周邊的輕鬆行程調時差。完整航班點左側「航班詳情」。',
+       tip:'星宇 JX026 台北 8/25 20:10 → 鳳凰城，轉 AA1587 → 8/26 06:00 抵達紐約 JFK 第8航廈。搭 AirTrain 到 Jamaica 轉地鐵 E 線直達中城（約 60–75 分），或計程車約 45 分。先到 CIVILIAN Hotel 寄行李，第一天走飯店周邊地標＋逛街，輕鬆調時差。完整航班點左側「航班詳情」。',
        img: WC('John_F._Kennedy_International_Airport_Terminal_4.jpg')},
       {name:'🏨 CIVILIAN Hotel — 寄放行李 Check-in', lat:40.76143, lng:-73.987451, dur:'住宿據點', hotel:true,
-       tip:'你紐約 4 晚的家（8/26–8/30 退房）。W 48th St，第 8～9 大道間。正式入住多在下午 3 點，但抵達後可先寄放行李。飯店就在時代廣場旁 5 分鐘、地鐵 A/C/E 與 1 線 50 St 站步行 3–5 分，動線最順的第一天就近玩。',
+       tip:'你紐約 4 晚的家（8/26–8/30 退房）。W 48th St，第 8～9 大道間，時代廣場旁 5 分鐘、地鐵 A/C/E 與 1 線 50 St 站步行 3–5 分。正式入住多在下午 3 點，抵達後可先寄放行李。',
        img: WC('New_york_times_square-terabass.jpg')},
-      {name:'Times Square', lat:40.7580, lng:-73.9855, dur:'1–2 hrs',
-       tip:'離飯店步行僅約 5 分鐘。傍晚霓虹最盛時最美，周邊地獄廚房 Hell\'s Kitchen 餐廳林立，回飯店路上正好吃晚餐。',
+      {name:'Times Square 時代廣場', lat:40.7580, lng:-73.9855, dur:'1 hr',
+       tip:'離飯店步行僅約 5 分鐘，先來感受紐約心臟。傍晚霓虹最盛時最美，周邊地獄廚房 Hell’s Kitchen 餐廳林立。',
        img: WC('New_york_times_square-terabass.jpg')},
-      {name:'The Vessel', lat:40.7536, lng:-74.0019, dur:'30 min',
-       tip:'哈德遜園區 Hudson Yards 的 16 層螺旋階梯地標。從飯店搭地鐵 7 號線一站到 34 St–Hudson Yards，或步行約 20 分。外觀免費觀賞，入內開放狀態請先確認。',
-       img: WC('The_Vessel_(48082084821).jpg')},
-      {name:'Edge Observation Deck', lat:40.7539, lng:-74.0022, dur:'1.5 hrs',
-       tip:'西半球最高的戶外天空甲板——100 樓、含玻璃地板，就在 Vessel 旁。安排在黃昏上去看日落與曼哈頓夜景最值得，之後一站地鐵回飯店。門票約 $38–50，建議先訂。',
-       img: WC('Edge_(observation_deck)_11-10-2021.jpg')},
+      {name:'Top of the Rock 洛克斐勒中心觀景台', lat:40.7592, lng:-73.9793, dur:'1.5 hrs',
+       tip:'洛克斐勒中心 70 樓觀景台，能同框拍到帝國大廈與中央公園，公認比帝國大廈視角更好。黃昏上去看日落轉夜景最值得，門票約 $40，建議先訂。',
+       img: WC('Rockefeller_Center.jpg')},
+      {name:'Fifth Avenue 第五大道（Saks／Bergdorf・聖派翠克大教堂）', lat:40.7585, lng:-73.9759, dur:'1.5 hrs',
+       tip:'從洛克斐勒往北就是第五大道精華段：Saks Fifth Avenue、Bergdorf Goodman 高級百貨、Tiffany，對街是宏偉的聖派翠克大教堂（免費入內）。逛街看櫥窗、朝聖名牌旗艦店。',
+       img: WC('Fifth_Avenue_New_York_City.jpg')},
+      {name:'Grand Central Terminal 中央車站', lat:40.7527, lng:-73.9772, dur:'45 min',
+       tip:'1913 年美術學院式車站傑作，抬頭看星空穹頂、拱廊與大時鐘。地下層 Grand Central Market 與美食街可覓食，之後散步或搭車回飯店。',
+       img: WC('Grand_Central_Terminal.jpg')},
     ]
   },
   {
-    id:2, type:'nyc', label:'Day 2 · Aug 27 (Thu)', city:'紐約 New York', theme:'金融中心 Financial Heart',
+    id:2, type:'nyc', label:'Day 2 · Aug 27 (Thu)', city:'紐約 New York', theme:'中央公園 · 藝術雙館 Museums',
     spots:[
       {name:'🏨 CIVILIAN Hotel — 出發 Start', lat:40.76143, lng:-73.987451, dur:'出發點', hotel:true,
-       tip:'從飯店走到 50 St 站搭地鐵 E 線直達 World Trade Center 站（約 20 分，不用轉車），今天由北往南一路走完金融區，傍晚原路搭 E 線回飯店。',
+       tip:'今天走「公園＋美術館」路線。從飯店搭 1 號線或走到 59 St–Columbus Circle 進中央公園南端，一路往上到大都會博物館，傍晚再回中城看 MoMA。',
        img: WC('New_york_times_square-terabass.jpg')},
-      {name:'9/11 Memorial & Museum', lat:40.7115, lng:-74.0130, dur:'2–3 hrs',
-       tip:'地鐵 E 線 World Trade Center 站出站即到，當作今天第一站。雙塔原址的倒影池莊嚴動人。博物館門票約 $33、戶外紀念池免費，建議先訂票。',
-       img: WC('National_September_11_Memorial_reflecting_pools.jpg')},
-      {name:'One World Observatory', lat:40.7127, lng:-74.0134, dur:'1.5 hrs',
-       tip:'就在紀念池旁，102 樓可眺望五大區。Sky Portal 玻璃地板是亮點。門票約 $40，看完接著往南走向華爾街。',
-       img: WC('One_World_Trade_Center,_New_York.jpg')},
-      {name:'Wall Street', lat:40.7074, lng:-74.0113, dur:'30 min',
-       tip:'從世貿往南步行約 8 分。全球金融最著名的街道；證交所對面的 Federal Hall 免費入內參觀。',
-       img: WC('Wall_Street_-_NYC.jpg')},
-      {name:'New York Stock Exchange', lat:40.7069, lng:-74.0089, dur:'20 min',
-       tip:'華爾街旁，外觀拍照點——內部不開放。Broad St 角度最佳，建物建於 1903 年。',
-       img: WC('New_York_Stock_Exchange.jpg')},
-      {name:'Charging Bull', lat:40.7056, lng:-74.0134, dur:'15 min',
-       tip:'今天最南端一站，位於 Bowling Green。1989 年起的華爾街樂觀象徵。看完可就近搭地鐵回飯店，或散步到旁邊的砲台公園（Day 4 的起點）先探路。',
-       img: WC('Charging_Bull_in_New_York_City.jpg')},
+      {name:'Central Park 中央公園', lat:40.7736, lng:-73.9712, dur:'2 hrs',
+       tip:'紐約之肺。經典路線：畢士達噴泉 Bethesda Terrace、弓橋 Bow Bridge、文學步道 The Mall。慢慢散步、拍照、租船，chill 感十足。免費。',
+       img: WC('Bethesda_Fountain_Central_Park.jpg')},
+      {name:'The Met 大都會藝術博物館', lat:40.7794, lng:-73.9632, dur:'2.5 hrs',
+       tip:'世界頂尖綜合博物館，位於博物館大道、中央公園東側。埃及神殿、歐洲繪畫、盔甲廳到頂樓花園都精彩，能真正驚艷你。門票約 $30，至少留半天。',
+       img: WC('Metropolitan_Museum_of_Art_entrance.jpg')},
+      {name:'MoMA 現代藝術博物館', lat:40.7614, lng:-73.9776, dur:'2 hrs',
+       tip:'中城 53rd St，梵谷《星夜》、莫內睡蓮、畢卡索、沃荷都在這，現代藝術迷必朝聖。門票約 $30，週五傍晚有免費時段（需先確認）。逛完就在飯店附近，晚餐方便。',
+       img: WC('Museum_of_Modern_Art_New_York.jpg')},
     ]
   },
   {
-    id:3, type:'nyc', label:'Day 3 · Aug 28 (Fri)', city:'紐約 New York', theme:'大橋 · 天際線 Skyline',
-    spots:[
-      {name:'🏨 CIVILIAN Hotel — 出發 Start', lat:40.76143, lng:-73.987451, dur:'出發點', hotel:true,
-       tip:'從飯店走到 42 St–Port Authority 站搭 A/C 線南下到 High St 或 Fulton St（約 25 分），今天從曼哈頓端走橋過河到布魯克林，傍晚在濱海步道看夕陽後搭地鐵回飯店。',
-       img: WC('New_york_times_square-terabass.jpg')},
-      {name:'Brooklyn Bridge', lat:40.7061, lng:-73.9969, dur:'45 min–1 hr',
-       tip:'由曼哈頓端往布魯克林走（約 1.1 英里）。當作今天第一站，上午光線好、人也較少，邊走邊拍天際線。',
-       img: WC('Brooklyn_Bridge_Postdlf.jpg')},
-      {name:'DUMBO', lat:40.7033, lng:-73.9888, dur:'1.5 hrs',
-       tip:'過橋後即抵。Washington St 框住曼哈頓大橋的畫面是紐約最熱門打卡點，鵝卵石街道旁盡是文青咖啡與藝廊。',
-       img: WC('DUMBO,_Brooklyn_-_Washington_Street_with_Manhattan_Bridge.jpg')},
-      {name:'Time Out Market NY', lat:40.7030, lng:-73.9890, dur:'1 hr',
-       tip:'就在 DUMBO 濱海旁，集結紐約人氣餐廳的美食廣場，午餐在這裡解決最順。',
-       img: WC('Time_Out_Market_New_York.jpg')},
-      {name:'Brooklyn Heights Promenade', lat:40.6977, lng:-73.9997, dur:'1 hr',
-       tip:'今天壓軸——公認眺望曼哈頓天際線最美的地方，黃昏金色時刻無敵，且免費、比觀景台清幽。看完由附近 2/3 線或 A/C 線回中城飯店。',
-       img: WC('BrooklynHeightsPromenade.JPG')},
-    ]
-  },
-  {
-    id:4, type:'nyc', label:'Day 4 · Aug 29 (Sat)', city:'紐約 New York', theme:'自由女神 · 港灣 Liberty',
+    id:3, type:'nyc', label:'Day 3 · Aug 28 (Fri)', city:'紐約 New York', theme:'下城金融 · 自由女神 Wall St & Liberty',
     spots:[
       {name:'🏨 CIVILIAN Hotel — 早點出發 Start early', lat:40.76143, lng:-73.987451, dur:'出發點', hotel:true,
-       tip:'今天要搭渡輪、宜早出發。從飯店走到 50 St 站搭 1 號線直達南端 South Ferry 站（約 25 分，不用轉車），出站即是砲台公園渡輪碼頭。週六人潮多，建議搭第一班船。',
+       tip:'今天搭渡輪＋走金融區，宜早出發。從飯店搭 1 號線直達 South Ferry 站（約 25 分），出站即砲台公園渡輪碼頭，先搭第一班船去自由女神，回程再往北走金融區。',
        img: WC('New_york_times_square-terabass.jpg')},
-      {name:'Battery Park', lat:40.7033, lng:-74.0170, dur:'30 min',
+      {name:'Battery Park 砲台公園', lat:40.7033, lng:-74.0170, dur:'30 min',
        tip:'自由女神渡輪出發點，1 號線 South Ferry 站出站即到。早點到搭第一班船、避開人潮。',
        img: WC('Battery_Park_New_York.jpg')},
-      {name:'Statue of Liberty', lat:40.6892, lng:-74.0445, dur:'2–3 hrs (incl. ferry)',
-       tip:'America\'s most iconic landmark. Crown tickets sell out weeks ahead — book early on nps.gov. Pedestal is also impressive. Verify schedule.',
+      {name:'Statue of Liberty 自由女神像', lat:40.6892, lng:-74.0445, dur:'2–3 hrs（含渡輪）',
+       tip:'美國最經典地標。登冠冕的票常提前數週售完，請早在 nps.gov 訂票；基座視野也很棒。搭船順路先看，回程接艾利斯島。',
        img: WC('Statue_of_Liberty_7.jpg')},
-      {name:'Ellis Island', lat:40.6995, lng:-74.0397, dur:'1.5 hrs',
-       tip:'Gateway for 12 million immigrants from 1892–1954. Included with ferry ticket. The Great Hall\'s restoration is remarkable.',
+      {name:'Ellis Island 艾利斯島', lat:40.6995, lng:-74.0397, dur:'1.5 hrs',
+       tip:'1892–1954 年 1,200 萬移民入境美國的門戶，門票含在渡輪票內。大廳修復精緻，移民博物館很動人。',
        img: WC('Ellis_Island_Shot.jpg')},
+      {name:'Wall Street・NYSE・Federal Hall 華爾街', lat:40.7069, lng:-74.0107, dur:'45 min',
+       tip:'回到砲台公園往北走進金融區——全球金融最著名的街道。紐約證交所（外觀拍照）、對面免費的 Federal Hall（華盛頓就職地）都在這。',
+       img: WC('Wall_Street_-_NYC.jpg')},
+      {name:'Charging Bull 華爾街銅牛', lat:40.7056, lng:-74.0134, dur:'15 min',
+       tip:'Bowling Green 旁的華爾街樂觀象徵（1989）。招牌打卡點，清晨或傍晚人較少。',
+       img: WC('Charging_Bull_in_New_York_City.jpg')},
+      {name:'9/11 Memorial & Museum 紀念館', lat:40.7115, lng:-74.0130, dur:'2 hrs',
+       tip:'雙塔原址的倒影池莊嚴動人。博物館門票約 $33、戶外紀念池免費。金融區北端，作為下午一站。',
+       img: WC('National_September_11_Memorial_reflecting_pools.jpg')},
+      {name:'One World Observatory 世貿一號觀景台', lat:40.7127, lng:-74.0134, dur:'1.5 hrs',
+       tip:'西半球最高樓 102 樓觀景，眺望五大區與港灣。壓軸看夜景，之後搭地鐵回飯店。門票約 $40。',
+       img: WC('One_World_Trade_Center,_New_York.jpg')},
     ]
   },
   {
-    id:5, type:'transit', label:'Day 5 · Aug 30 (Sun)', city:'紐約 → 波士頓 NYC→Boston', theme:'轉場日 · 海港區 Transit',
+    id:4, type:'nyc', label:'Day 4 · Aug 29 (Sat)', city:'紐約 New York', theme:'布魯克林 · 蘇活 · 格林威治村 Brooklyn & Village',
+    spots:[
+      {name:'🏨 CIVILIAN Hotel — 出發 Start', lat:40.76143, lng:-73.987451, dur:'出發點', hotel:true,
+       tip:'今天主打美食＋購物＋chill 街區。從飯店搭 A/C 線南下到 High St（布魯克林端），走橋、逛 DUMBO，再回曼哈頓逛蘇活與格林威治村，晚餐在西村，動線由南往北。',
+       img: WC('New_york_times_square-terabass.jpg')},
+      {name:'Brooklyn Bridge 布魯克林大橋', lat:40.7061, lng:-73.9969, dur:'45 min',
+       tip:'紐約最經典步行體驗，邊走邊拍曼哈頓天際線。從布魯克林端往回走光線與人潮都較好。',
+       img: WC('Brooklyn_Bridge_Postdlf.jpg')},
+      {name:'DUMBO 布魯克林濱海區', lat:40.7033, lng:-73.9888, dur:'1.5 hrs',
+       tip:'Washington St 框住曼哈頓大橋是紐約最紅打卡點；鵝卵石街道旁盡是文青咖啡、藝廊與甜點。',
+       img: WC('DUMBO,_Brooklyn_-_Washington_Street_with_Manhattan_Bridge.jpg')},
+      {name:'Time Out Market 美食廣場', lat:40.7030, lng:-73.9890, dur:'1 hr',
+       tip:'DUMBO 濱海旁，集結紐約人氣餐廳的美食廣場，露台正對大橋與天際線，午餐首選。',
+       img: WC('Time_Out_Market_New_York.jpg')},
+      {name:'SoHo 蘇活區購物', lat:40.7233, lng:-73.9987, dur:'2 hrs',
+       tip:'鑄鐵建築歷史街區，名牌旗艦與設計師小店雲集（Broadway、Prince St、Spring St）。隨走隨逛最享受，也可順看排隊角落披薩 Prince Street Pizza。',
+       img: WC('SoHo_Manhattan.jpg')},
+      {name:'Greenwich Village 格林威治村・華盛頓廣場', lat:40.7308, lng:-73.9973, dur:'1.5 hrs',
+       tip:'華盛頓廣場拱門、NYU、爵士酒吧與經典街角披薩。西村小巷咖啡與餐酒館林立，chill 散步、吃晚餐收尾最對味。',
+       img: WC('Washington_Square_Arch.jpg')},
+    ]
+  },
+  {
+    id:5, type:'transit', label:'Day 5 · Aug 30 (Sun)', city:'紐約 → 波士頓 NYC→Boston', theme:'轉場日 · 空中公園＋北角 Transit',
     spots:[
       {name:'🏨 CIVILIAN Hotel — 退房 Check-out', lat:40.76143, lng:-73.987451, dur:'退房日', hotel:true,
-       tip:'紐約最後一晚（8/29 住）今早退房。行李可先寄放櫃檯，輕裝去走 High Line；回程取行李後步行約 12 分（或一段地鐵）到 Penn Station 搭 Amtrak 前往波士頓。飯店到 Penn Station 只有約 15 條街，動線很順。',
+       tip:'紐約最後一晚（8/29 住）今早退房，行李寄放櫃檯，輕裝去 Chelsea Market 覓食、走 High Line。回程取行李後到 Penn Station 搭 Amtrak 前往波士頓（約 15 條街，很順）。',
        img: WC('New_york_times_square-terabass.jpg')},
-      {name:'The High Line', lat:40.7480, lng:-74.0048, dur:'1 hr',
-       tip:'由 1930 年代廢棄高架貨運鐵道改建的空中公園，紐約最具創意的都市更新之一，免費。北端入口距飯店僅約 10 分鐘、退房後散步剛好，南下走到 Chelsea 再折返 Penn Station。',
+      {name:'Chelsea Market 雀兒喜市場', lat:40.7424, lng:-74.0061, dur:'1 hr',
+       tip:'廢棄餅乾工廠改建的美食市集，龍蝦、塔可、可麗餅、甜點一次滿足。就在 High Line 旁，退房後先來吃早午餐。',
+       img: WC('Chelsea_Market.jpg')},
+      {name:'The High Line 空中公園', lat:40.7480, lng:-74.0048, dur:'1 hr',
+       tip:'1930 年代廢棄高架鐵道改建的空中花園，一路綠意與藝術裝置，免費。往北走到 34 St 附近正好接 Penn Station。',
        img: WC('High_Line_NYC_spring_2014.jpg')},
-      {name:'Penn Station — Amtrak Departure', lat:40.7506, lng:-73.9971, dur:'—',
-       tip:'Take Amtrak Acela Express to Boston (3.5 hrs). Book early for best prices. Acela tickets vary widely by time.',
+      {name:'Penn Station — Amtrak 出發', lat:40.7506, lng:-73.9971, dur:'—',
+       tip:'搭 Amtrak Acela 特快前往波士頓（約 3.5 小時）。建議先上網訂票、越早越便宜。',
        img: WC('Moynihan_Train_Hall_Interior.jpg')},
-      {name:'Boston South Station — Arrival', lat:42.3519, lng:-71.0552, dur:'—',
-       tip:'Amtrak 波士頓總站。出站搭紅線一站到 Downtown Crossing 轉橘/綠線，或直接叫車約 10 分到 North Station 的 citizenM 飯店。',
+      {name:'Boston South Station 抵達', lat:42.3519, lng:-71.0552, dur:'—',
+       tip:'Amtrak 波士頓總站。出站搭紅線一站到 Downtown Crossing 轉橘線到 North Station，或直接叫車約 10 分到 citizenM 飯店。',
        img: WC('South_Station_Boston.jpg')},
       {name:'🏨 citizenM Boston North Station — 入住 Check-in', lat:42.3655618, lng:-71.0618501, dur:'住宿據點', hotel:true,
-       tip:'你波士頓的 5 晚據點（8/30–9/3 住，9/4 退房）。就在 North Station／TD Garden 旁，綠線＋橘線交會，去 MIT、哈佛、自由之路都很方便。先來寄放行李，晚上再去海港區吃飯；飯店旁的北角 North End 是波士頓著名的義大利區，第一晚想就近吃也很讚。',
+       tip:'波士頓 5 晚據點（8/30–9/3 住，9/4 退房）。North Station／TD Garden 旁，綠線＋橘線交會，去 MIT、哈佛、自由之路都方便。放好行李，晚餐就走去隔壁的北角。',
        img: WC('TD_Garden_and_North_Station.jpg')},
-      {name:'Seaport District', lat:42.3533, lng:-71.0493, dur:'1.5 hrs',
-       tip:'波士頓的創新海港區——生技公司、人氣餐廳與海景。放好行李後搭銀線 SL 或叫車過來吃第一晚晚餐，散步看港灣夜景後回 North Station 飯店。',
-       img: WC('Boston_Seaport_District.jpg')},
+      {name:'North End 北角義大利區（晚餐）', lat:42.3647, lng:-71.0542, dur:'1.5 hrs',
+       tip:'飯店步行約 8 分即到——波士頓的小義大利，Hanover St 上滿是義大利餐廳與卡諾里名店（Mike’s、Modern Pastry）。第一晚就近吃美食、散步最 chill。',
+       img: WC('Hanover_Street_North_End_Boston.jpg')},
     ]
   },
   {
-    id:6, type:'tech', label:'Day 6 · Aug 31 (Mon)', city:'劍橋 Cambridge — MIT', theme:'MIT 一日 Full Day',
+    id:6, type:'tech', label:'Day 6 · Aug 31 (Mon)', city:'劍橋 Cambridge — MIT＋哈佛', theme:'大學城一日：MIT＋哈佛 Cambridge',
     spots:[
       {name:'🏨 citizenM North Station — 出發 Start', lat:42.3655618, lng:-71.0618501, dur:'出發點', hotel:true,
-       tip:'從飯店走到 North Station 搭綠線到 Park St 轉紅線，或直接叫車過查爾斯河到 Kendall/MIT（約 10 分）。今天由東往西逛完 MIT 校園，傍晚原路回飯店。',
+       tip:'MIT＋哈佛併成一天：上午 MIT、下午哈佛。從飯店搭綠線到 Park St 轉紅線，先到 Kendall/MIT，逛完再搭紅線兩站到 Harvard，晚上哈佛廣場吃飯後回飯店。',
        img: WC('TD_Garden_and_North_Station.jpg')},
-      {name:'Kendall Square', lat:42.3626, lng:-71.0886, dur:'1 hr',
-       tip:'紅線 Kendall/MIT 站出站即到，當作進校園第一站。「地表最創新的一平方英里」——Google、Pfizer、Biogen 與 200＋ 新創聚集，感受點子的密度。',
-       img: WC('Kendall_Square_Cambridge_Massachusetts.jpg')},
-      {name:'MIT Stata Center', lat:42.3620, lng:-71.0897, dur:'45 min',
-       tip:'Frank Gehry 的解構主義怪奇建築，CSAIL（AI 實驗室）與 EECS 所在地。走進迷宮般的內部——它就是故意讓你迷路的。',
-       img: WC('MIT_CSAIL_building.jpg')},
-      {name:'MIT Museum', lat:42.3601, lng:-71.0871, dur:'1.5 hrs',
-       tip:'機器人、全像投影與 AI 展品，全來自 MIT 研究室，互動性十足。門票約 $20，建議先確認開放時間。',
-       img: WC('MIT_Museum_entrance_2022.jpg')},
-      {name:'MIT Infinite Corridor', lat:42.3598, lng:-71.0929, dur:'30 min',
-       tip:'251 公尺長的室內長廊串起各棟建築。一年兩次夕陽完美對齊——MIT-Henge。免費穿行。',
-       img: WC('Infinite_Corridor.jpg')},
-      {name:'MIT Great Dome (Killian Court)', lat:42.3598, lng:-71.0934, dur:'30 min',
-       tip:'俯瞰查爾斯河的圓頂地標，經典拍照點、也是畢業典禮的聚集地。壓軸在河畔拍完再搭車回飯店。',
+      {name:'MIT Great Dome & Killian Court 大圓頂', lat:42.3598, lng:-71.0934, dur:'40 min',
+       tip:'俯瞰查爾斯河的圓頂地標與草坪廣場，MIT 最經典的一張照片。紅線 Kendall 站步行可到。',
        img: WC('MIT_Dome_night1_Edit.jpg')},
-    ]
-  },
-  {
-    id:7, type:'harvard', label:'Day 7 · Sep 1 (Tue)', city:'劍橋 Cambridge — Harvard', theme:'哈佛 一日 Harvard',
-    spots:[
-      {name:'🏨 citizenM North Station — 出發 Start', lat:42.3655618, lng:-71.0618501, dur:'出發點', hotel:true,
-       tip:'從飯店 North Station 搭綠線到 Park St 轉紅線，一車直達 Harvard 站（約 25 分）。出站即是哈佛廣場，今天從主校園逛到查爾斯河對岸的商學院，晚上回到哈佛廣場散步後搭紅線回飯店。',
-       img: WC('TD_Garden_and_North_Station.jpg')},
-      {name:'Harvard Yard', lat:42.3770, lng:-71.1167, dur:'1 hr',
-       tip:'The historic heart of America\'s oldest university (1636). John Harvard statue, red-brick dormitories, centuries of tradition. Free and open to the public.',
+      {name:'MIT Stata Center', lat:42.3620, lng:-71.0897, dur:'40 min',
+       tip:'Frank Gehry 的解構主義怪奇建築，CSAIL（AI 實驗室）所在地，內部像迷宮般有趣。',
+       img: WC('MIT_CSAIL_building.jpg')},
+      {name:'MIT Museum 博物館', lat:42.3625, lng:-71.0865, dur:'1.5 hrs',
+       tip:'機器人、全像投影與 AI 展品，互動性十足（現址在 Kendall 廣場旁）。門票約 $18，逛完在 Kendall 午餐後搭紅線去哈佛。',
+       img: WC('MIT_Museum_entrance_2022.jpg')},
+      {name:'Harvard Yard 哈佛庭園', lat:42.3770, lng:-71.1167, dur:'1 hr',
+       tip:'全美最古老大學（1636）的歷史核心，John Harvard 銅像、紅磚宿舍與百年傳統。免費開放，紅線 Harvard 站出站即到。',
        img: WC('Harvard_Yard,_Cambridge_MA.jpg')},
-      {name:'Harvard Art Museums', lat:42.3736, lng:-71.1142, dur:'1.5 hrs',
-       tip:'Three museums in one building: Fogg, Busch-Reisinger, and Sackler. Superb collection with Impressionists and German Expressionism. Tickets ~$20. Verify.',
+      {name:'Harvard Art Museums 哈佛藝術博物館', lat:42.3736, lng:-71.1142, dur:'1 hr',
+       tip:'三館合一（Fogg 等），印象派與德國表現主義收藏精彩，Renzo Piano 玻璃中庭很美。門票約 $20。',
        img: WC('Harvard_Art_Museums_after_renovation.jpg')},
-      {name:'Harvard Museum of Natural History', lat:42.3782, lng:-71.1155, dur:'1 hr',
-       tip:'Famous for the Glass Flowers — 4,000 botanically accurate glass models. Dinosaur skeletons and meteorites also on display. Tickets ~$15. Verify.',
-       img: WC('Harvard_Museum_of_Natural_History.jpg')},
-      {name:'Harvard Business School Campus', lat:42.3671, lng:-71.1248, dur:'45 min',
-       tip:'Across the Charles River from main campus — stately brick buildings and manicured grounds. Free to walk. The case-study method was born here in 1908.',
-       img: WC('Harvard_Business_School_Aldrich_Hall.jpg')},
-      {name:'Harvard Square', lat:42.3736, lng:-71.1190, dur:'1 hr',
-       tip:'Vibrant square with independent bookshops (Harvard Book Store est. 1932), street performers, and legendary coffee culture. Perfect for a relaxed evening.',
+      {name:'Harvard Square 哈佛廣場', lat:42.3736, lng:-71.1190, dur:'1.5 hrs',
+       tip:'獨立書店、街頭藝人、咖啡文化匯聚。晚餐推薦傳奇漢堡 Mr. Bartley’s 或廣場周邊小館，吃飽再搭紅線回飯店。',
        img: WC('Harvard_Square_2018_01.jpg')},
     ]
   },
   {
-    id:8, type:'boston', label:'Day 8 · Sep 2 (Wed)', city:'波士頓 Boston', theme:'歷史 · 金融起源 History',
+    id:7, type:'boston', label:'Day 7 · Sep 1 (Tue)', city:'波士頓 Boston', theme:'自由之路 · 殖民歷史 Freedom Trail',
     spots:[
       {name:'🏨 citizenM North Station — 出發 Start', lat:42.3655618, lng:-71.0618501, dur:'出發點', hotel:true,
-       tip:'今天走「自由之路 Freedom Trail」——而且終點就在飯店旁！先搭綠線一站到 Government Center 或散步到波士頓公園起點，沿紅磚步道一路往北走回 North Station，最後在 Faneuil／北角吃飯，走完直接回飯店最順。',
+       tip:'今天走完整條「自由之路 Freedom Trail」（紅磚步道，約 4 公里）。搭綠線一站到 Government Center 或散步到波士頓公園起點，沿路往北走回飯店端，終點查爾斯鎮就在飯店對岸。',
        img: WC('TD_Garden_and_North_Station.jpg')},
-      {name:'Boston Common', lat:42.3554, lng:-71.0655, dur:'30 min',
-       tip:'全美最古老的公共公園（1634），自由之路起點。中央噴泉是經典拍照點，免費。',
+      {name:'Boston Common 波士頓公園', lat:42.3554, lng:-71.0655, dur:'30 min',
+       tip:'全美最古老公共公園（1634），自由之路起點。免費。',
        img: WC('Boston_Common_and_Public_Garden_aerial.jpg')},
-      {name:'Massachusetts State House', lat:42.3588, lng:-71.0636, dur:'30 min',
-       tip:'23K 金圓頂矗立於燈塔山。內部免費導覽——參議院議事廳與 Doric Hall 是亮點。請先確認開放時間。',
+      {name:'Massachusetts State House 州議會', lat:42.3588, lng:-71.0636, dur:'30 min',
+       tip:'23K 金圓頂矗立燈塔山，內部免費導覽。',
        img: WC('Massachusetts_State_House,_Boston,_Massachusetts.jpg')},
-      {name:'Old South Meeting House', lat:42.3575, lng:-71.0580, dur:'45 min',
-       tip:'1773 年波士頓茶葉黨在此策動——美國第一場抗稅。理解「金融反抗」的關鍵地點。門票約 $8。',
+      {name:'Old South Meeting House', lat:42.3575, lng:-71.0580, dur:'30 min',
+       tip:'1773 年波士頓茶葉黨在此策動——美國第一場抗稅。門票約 $8。',
        img: WC('Old_South_Meeting_House.jpg')},
-      {name:'Old State House', lat:42.3584, lng:-71.0574, dur:'30 min',
-       tip:'波士頓最古老的公共建築（1713），殖民時期金融與司法權力中心。門外即波士頓大屠殺遺址。門票約 $14。',
+      {name:'Old State House 舊州議會', lat:42.3584, lng:-71.0574, dur:'30 min',
+       tip:'波士頓最古老公共建築（1713），殖民時期金融與司法中心，門外即波士頓大屠殺遺址。門票約 $14。',
        img: WC('Old_State_House_Boston.jpg')},
-      {name:'Faneuil Hall', lat:42.3600, lng:-71.0560, dur:'30 min',
-       tip:'「自由的搖籃」——愛國者辯論獨立之地，一樓是熱鬧的市集。距飯店步行僅約 8 分，接近終點。免費。',
+      {name:'Faneuil Hall & Quincy Market 市集', lat:42.3600, lng:-71.0560, dur:'1.5 hrs',
+       tip:'「自由的搖籃」＋熱鬧市場大廳，美食攤與餐廳林立，午餐在這解決。距飯店步行約 8 分。',
        img: WC('Faneuil_Hall,_Boston,_Massachusetts.jpg')},
-      {name:'Quincy Market', lat:42.3601, lng:-71.0559, dur:'1 hr',
-       tip:'19 世紀希臘復興式市場大廳，如今滿是餐廳與美食攤，午／晚餐都適合。走完離飯店只剩幾分鐘路程。',
-       img: WC('Quincy_Market,_Boston,_Massachusetts.jpg')},
+      {name:'Paul Revere House 保羅·里維爾故居', lat:42.3637, lng:-71.0536, dur:'30 min',
+       tip:'北角區、波士頓市區最古老民宅（約 1680），1775 年午夜騎士示警起點。門票約 $6。就在飯店旁的北角。',
+       img: WC('Paul_Revere_House_Boston.jpg')},
+      {name:'Old North Church 老北教堂', lat:42.3663, lng:-71.0544, dur:'30 min',
+       tip:'「一盞燈走陸路、兩盞走海路」的信號教堂（1723），波士頓最古老教堂。北角區，離飯店很近。',
+       img: WC('Old_North_Church_Boston.jpg')},
+      {name:'Bunker Hill & USS Constitution 查爾斯鎮', lat:42.3763, lng:-71.0609, dur:'1.5 hrs',
+       tip:'自由之路終點：Bunker Hill 紀念碑與全球現役最老軍艦 USS Constitution（1797，免費登船）。就在飯店對岸，走過河或搭渡輪，看完回飯店最順。',
+       img: WC('Bunker_Hill_Monument.jpg')},
+    ]
+  },
+  {
+    id:8, type:'boston', label:'Day 8 · Sep 2 (Wed)', city:'波士頓 Boston', theme:'金融區 · 海港 · 茶葉黨 Finance & Harbor',
+    spots:[
+      {name:'🏨 citizenM North Station — 出發 Start', lat:42.3655618, lng:-71.0618501, dur:'出發點', hotel:true,
+       tip:'今天走波士頓金融區與海港，深度金融＋歷史。從飯店步行或一站地鐵到 State Street 金融區，往海邊走到茶葉黨博物館、綠廊與長碼頭，動線由內陸往港口。',
+       img: WC('TD_Garden_and_North_Station.jpg')},
+      {name:'Financial District（State Street）金融區', lat:42.3568, lng:-71.0555, dur:'1 hr',
+       tip:'State Street 是美國最早的金融街之一，摩天樓與殖民時期舊建築交錯。散步感受波士頓的金融起源，Post Office Square 小綠地適合喝杯咖啡。',
+       img: WC('Boston_Financial_District.jpg')},
+      {name:'Custom House Tower 海關大樓觀景台', lat:42.3597, lng:-71.0533, dur:'45 min',
+       tip:'1915 年波士頓第一棟摩天樓、昔日海關（關稅＝早期政府財政）。26 樓觀景台可俯瞰港灣與市區，金融史＋城市視角的雙重亮點。',
+       img: WC('Custom_House_Tower_Boston.jpg')},
+      {name:'Boston Tea Party Ships & Museum 茶葉黨博物館', lat:42.3519, lng:-71.0518, dur:'1.5 hrs',
+       tip:'重現 1773 年傾茶事件——美國抗稅與獨立的導火線。互動體驗可登船倒茶，理解「金融反抗」的最佳一站。門票約 $34。',
+       img: WC('Boston_Tea_Party_Ships_and_Museum.jpg')},
+      {name:'Rose Kennedy Greenway 綠廊', lat:42.3601, lng:-71.0519, dur:'45 min',
+       tip:'把高架公路地下化後建成的帶狀公園，噴泉、旋轉木馬與美食餐車。從茶葉黨博物館往北一路連到北角。',
+       img: WC('Rose_Kennedy_Greenway.jpg')},
+      {name:'New England Aquarium & Long Wharf 海港', lat:42.3592, lng:-71.0499, dur:'1.5 hrs',
+       tip:'長碼頭海港區——水族館、賞鯨碼頭與海景餐廳。傍晚在港邊吃海鮮、看船，chill 收尾後散步或搭車回飯店。',
+       img: WC('New_England_Aquarium.jpg')},
     ]
   },
   {
@@ -527,38 +595,41 @@ const DAYS = [
       {name:'🏨 citizenM North Station — 出發 Start', lat:42.3655618, lng:-71.0618501, dur:'出發點', hotel:true,
        tip:'波士頓最後一晚（9/3 住）今天當日來回新港。建議早上租車或搭巴士南下約 1.5 小時，玩完鍍金時代豪宅傍晚開回 North Station 飯店。飯店旁就是主要幹道與租車點，進出高速公路方便。',
        img: WC('TD_Garden_and_North_Station.jpg')},
-      {name:'The Breakers', lat:41.4754, lng:-71.2999, dur:'2 hrs',
-       tip:'Vanderbilt family\'s 70-room Italian Renaissance summer palace (1895). The most spectacular Gilded Age mansion open to the public. Tickets ~$26–35. Verify.',
+      {name:'The Breakers 範德堡豪宅', lat:41.4754, lng:-71.2999, dur:'2 hrs',
+       tip:'范德堡家族 70 房義大利文藝復興夏宮（1895），對外開放最壯觀的鍍金時代豪宅。門票約 $26–35。',
        img: WC('TheBreakers.jpg')},
-      {name:'Cliff Walk', lat:41.4794, lng:-71.2945, dur:'1.5 hrs',
-       tip:'3.5-mile trail where the Atlantic crashes on one side and Gilded Age mansions rise on the other. Free, dramatic, and unforgettable.',
+      {name:'Cliff Walk 懸崖步道', lat:41.4794, lng:-71.2945, dur:'1.5 hrs',
+       tip:'一側是大西洋拍岸、一側是鍍金時代豪宅的 5.6 公里海崖步道，免費、壯闊難忘。',
        img: WC('Newport_cliff_walk_overview.jpg')},
-      {name:'Marble House', lat:41.4717, lng:-71.3025, dur:'1 hr',
-       tip:'William K. Vanderbilt\'s 1892 summer cottage inspired by the Petit Trianon at Versailles. Gold Ballroom is jaw-dropping. Tickets ~$26. Verify.',
+      {name:'Marble House 大理石屋', lat:41.4717, lng:-71.3025, dur:'1 hr',
+       tip:'范德堡 1892 年仿凡爾賽小特里亞農宮的夏日別墅，金色舞廳令人瞠目。門票約 $26。',
        img: WC('Marble_House_Newport_RI.jpg')},
-      {name:'Newport Harbor', lat:41.4901, lng:-71.3128, dur:'1 hr',
-       tip:'End the day with fresh lobster by the water, watching yachts drift in. The harbor epitomizes old American money.',
+      {name:'Newport Harbor 新港港灣', lat:41.4901, lng:-71.3128, dur:'1 hr',
+       tip:'在水邊來份新鮮龍蝦、看遊艇進港作結。港灣濃縮了美國老錢的氛圍。',
        img: WC('Newport_harbor_ri.jpg')},
     ]
   },
   {
-    id:10, type:'boston', label:'Day 10 · Sep 4 (Fri)', city:'波士頓 Boston · 返程日', theme:'尾聲 · 返程 Departure',
+    id:10, type:'boston', label:'Day 10 · Sep 4 (Fri)', city:'波士頓 Boston · 返程日', theme:'後灣優雅收尾 · 返程 Back Bay',
     spots:[
       {name:'🏨 citizenM North Station — 退房 Check-out', lat:42.3655618, lng:-71.0618501, dur:'退房日', hotel:true,
-       tip:'今早退房，行李寄放櫃檯輕裝逛後灣 Back Bay。飯店在 North Station，回來取行李後搭橘線或叫車去羅根機場（BOS）都很快（約 15 分）。傍晚務必約 17:00 前抵達機場。',
+       tip:'今早退房，行李寄放櫃檯，輕裝逛後灣 Back Bay。回來取行李後搭橘線或叫車去羅根機場（BOS，約 15 分）。傍晚務必約 17:00 前抵達機場。',
        img: WC('TD_Garden_and_North_Station.jpg')},
-      {name:'Fenway Park', lat:42.3467, lng:-71.0972, dur:'1.5 hrs',
-       tip:'最古老的 MLB 球場（1912），紅襪隊主場。當作今天最西邊第一站，幕後導覽每日開放、門票約 $25，建議先查場次訂票，之後往東進後灣。',
+      {name:'Fenway Park 芬威球場', lat:42.3467, lng:-71.0972, dur:'1.5 hrs',
+       tip:'最古老的 MLB 球場（1912），紅襪主場。今天最西一站，幕後導覽每日開放、門票約 $25，建議先查場次。之後往東進後灣。',
        img: WC('Fenway_Park,_Boston,_MA_(aerial).jpg')},
-      {name:'Prudential Skywalk Observatory', lat:42.3476, lng:-71.0822, dur:'1 hr',
-       tip:'50 樓 360° 全景——查爾斯河、劍橋、波士頓港盡收眼底，全城最佳天際線視角。門票約 $21。',
+      {name:'Prudential Skywalk 觀景台', lat:42.3476, lng:-71.0822, dur:'1 hr',
+       tip:'50 樓 360° 全景，查爾斯河、劍橋與波士頓港盡收眼底。門票約 $21。',
        img: WC('Prudential_Center,_Boston.jpg')},
-      {name:'Boston Public Library', lat:42.3496, lng:-71.0784, dur:'30–45 min',
-       tip:'1895 年義大利文藝復興傑作。Bates Hall 閱覽室與靜謐中庭美得屏息，就在 Prudential 旁。免費。',
+      {name:'Boston Public Library 公共圖書館', lat:42.3496, lng:-71.0784, dur:'45 min',
+       tip:'1895 年義大利文藝復興傑作，Bates Hall 閱覽室與中庭美得屏息，免費。就在 Copley 廣場旁。',
        img: WC('Boston_Public_Library_in_Copley_Square.jpg')},
-      {name:'Copley Square', lat:42.3496, lng:-71.0779, dur:'30 min',
-       tip:'波士頓馬拉松終點線，被三一教堂與 BPL 環繞。行程最後一段散步，之後回 North Station 取行李前往機場。',
-       img: WC('Copley_Square,_Boston.jpg')},
+      {name:'Trinity Church & Copley Square 三一教堂', lat:42.3548, lng:-71.0745, dur:'45 min',
+       tip:'Copley 廣場上的三一教堂是美國建築名作，波士頓馬拉松終點線也在此。廣場周邊優雅好拍。',
+       img: WC('Trinity_Church_Boston.jpg')},
+      {name:'Newbury Street 紐伯里街購物', lat:42.3510, lng:-71.0810, dur:'1.5 hrs',
+       tip:'後灣最時髦的購物街，褐石排屋裡藏著精品、設計小店與咖啡廳，隨走隨逛最享受。行程最後的悠閒 shopping。',
+       img: WC('Newbury_Street_Boston.jpg')},
       {name:'✈ 出發 BOS 19:59 — AS306 + JX031（經西雅圖 Seattle）', lat:42.3656, lng:-71.0096, dur:'—',
        tip:'約 17:00 前抵達波士頓羅根機場（BOS，Terminal B）。阿拉斯加 AS306 波士頓 9/4 19:59 → 西雅圖 23:12，過夜轉星宇 JX031 西雅圖 9/5 01:15 → 9/6 04:55 抵台北。西雅圖轉機僅約 2 小時、很趕——行李務必掛到底 TPE。完整航班點左側「航班詳情」。',
        img: WC('Logan_International_Airport_(Boston).jpg')},
@@ -733,7 +804,102 @@ function openFlights() {
 function closeFlights() {
   document.getElementById('flt-overlay').classList.remove('open');
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFlights(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeFlights(); closeFood(); } });
+
+/* ── Restaurants ── */
+const FOOD = [
+  { city:'🗽 紐約 New York', tiers:[
+    { tier:'貴的 · 小奢華 Splurge（$$$）', color:'#8a5a1a', items:[
+      {n:'Le Bernardin', a:'中城 51st St', note:'米其林三星海鮮法餐，全球公認頂級，務必提前訂位。'},
+      {n:'Eleven Madison Park', a:'Flatiron', note:'米其林三星純素 fine dining，紐約最話題名店。'},
+      {n:'Peter Luger Steak House', a:'布魯克林 Williamsburg', note:'百年乾式熟成牛排傳奇（Day4 布魯克林順路）。'},
+      {n:'Keens Steakhouse', a:'中城 36th St', note:'1885 老牌牛排館，招牌羊排、天花板菸斗牆。'},
+      {n:'Carbone', a:'格林威治村', note:'復古義大利名店、一位難求（Day4 附近）。'},
+      {n:'The Modern', a:'MoMA 館內', note:'米其林二星，配藝術行程剛好（Day2 順路）。'},
+      {n:'Balthazar', a:'SoHo', note:'經典法式 brasserie，名人愛店（Day4 順路）。'},
+      {n:'Gramercy Tavern', a:'Gramercy', note:'美式精緻料理常勝軍，氛圍溫暖。'},
+    ]},
+    { tier:'中等價位 Mid-range（$$）', color:'#2f7d5b', items:[
+      {n:'Katz’s Delicatessen', a:'下東城', note:'1888 手切煙燻牛肉三明治，《當哈利遇上莎莉》場景。'},
+      {n:'Los Tacos No.1', a:'Chelsea Market／時代廣場', note:'公認全紐約最紅的墨西哥塔可（Day5 順路）。'},
+      {n:'Lombardi’s Pizza', a:'Nolita', note:'全美第一家披薩店（1905），煤爐薄脆。'},
+      {n:'Ippudo NY', a:'東村', note:'日本一風堂拉麵，濃郁豚骨湯。'},
+      {n:'Russ & Daughters', a:'下東城', note:'百年猶太熟食，貝果配燻鮭魚必試。'},
+      {n:'Levain Bakery', a:'上西城', note:'超厚爆漿餅乾，中央公園散步後順吃（Day2 附近）。'},
+      {n:'Eataly', a:'Flatiron／世貿', note:'大型義大利美食市集，現做義麵披薩。'},
+      {n:'Xi’an Famous Foods', a:'多分店', note:'手拉麵、孜然羊肉麵，平價又夠味。'},
+    ]},
+    { tier:'便宜必吃 Cheap Eats（$）', color:'#b3532f', items:[
+      {n:'Joe’s Pizza', a:'格林威治村', note:'經典紐約街角切片披薩（Day4 順路）。'},
+      {n:'The Halal Guys', a:'中城 53rd & 6th', note:'街頭雞肉飯餐車始祖（Day1 飯店附近）。'},
+      {n:'Prince Street Pizza', a:'SoHo', note:'方形辣腸角落披薩，長年排隊（Day4 順路）。'},
+      {n:'Nom Wah Tea Parlor', a:'中國城', note:'1920 老字號港式點心，蝦餃燒賣。'},
+      {n:'Vanessa’s Dumpling House', a:'中國城／下東城', note:'銅板價煎餃與芝麻餅。'},
+      {n:'Ess-a-Bagel', a:'中城', note:'紐約經典大貝果，早餐好選擇。'},
+      {n:'Gray’s Papaya', a:'上西城', note:'24 小時經典熱狗，超平價。'},
+      {n:'Chelsea Market（美食街）', a:'Chelsea', note:'龍蝦、塔可、甜點一次逛（Day5 順路）。'},
+      {n:'Time Out Market', a:'DUMBO', note:'名店集結美食廣場，露台看大橋（Day4 順路）。'},
+      {n:'Magnolia Bakery', a:'多分店', note:'香蕉布丁與杯子蛋糕，甜點打卡。'},
+    ]},
+  ]},
+  { city:'🦞 波士頓 Boston', tiers:[
+    { tier:'貴的 · 小奢華 Splurge（$$$）', color:'#8a5a1a', items:[
+      {n:'Neptune Oyster', a:'北角 North End', note:'生蠔＆龍蝦堡名店，不接受訂位常排隊（飯店旁）。'},
+      {n:'O Ya', a:'Leather District', note:'頂級創意壽司，波士頓最高級之一，需訂位。'},
+      {n:'Grill 23 & Bar', a:'後灣 Back Bay', note:'波士頓經典高級牛排館（Day10 附近）。'},
+      {n:'Mistral', a:'後灣', note:'地中海法式精緻料理，氣氛優雅。'},
+      {n:'Row 34', a:'Seaport', note:'精緻生蠔與海鮮、精釀啤酒（Day8 海港附近）。'},
+      {n:'Saltie Girl', a:'後灣 Newbury St', note:'時髦海鮮酒吧，罐頭海鮮與龍蝦（Day10 順路）。'},
+    ]},
+    { tier:'中等價位 Mid-range（$$）', color:'#2f7d5b', items:[
+      {n:'Union Oyster House', a:'Faneuil 旁', note:'全美最古老餐廳（1826），蛤蜊巧達湯（Day7 順路）。'},
+      {n:'Giacomo’s Ristorante', a:'北角 North End', note:'排隊義大利麵海鮮，現金、份量大（飯店旁）。'},
+      {n:'Legal Sea Foods', a:'多點／海港', note:'波士頓蛤蜊巧達湯代表，觀光客友善。'},
+      {n:'Mr. Bartley’s', a:'哈佛廣場', note:'傳奇漢堡店，配 frappe 奶昔（Day6 順路）。'},
+      {n:'Toro', a:'South End', note:'Ken Oringer 西班牙 tapas 名店，烤玉米必點。'},
+      {n:'Tatte Bakery', a:'多分店', note:'人氣中東風烘焙與早午餐，好拍好吃。'},
+      {n:'Yankee Lobster', a:'Seaport', note:'在地漁家龍蝦堡，海港氛圍（Day8 附近）。'},
+    ]},
+    { tier:'便宜必吃 Cheap Eats（$）', color:'#b3532f', items:[
+      {n:'Mike’s Pastry', a:'北角 North End', note:'排隊卡諾里 cannoli 名店（飯店旁）。'},
+      {n:'Modern Pastry', a:'北角', note:'在地人愛的卡諾里對手，現填酥脆（飯店旁）。'},
+      {n:'Regina Pizzeria', a:'北角', note:'1926 波士頓最老披薩，煤爐薄脆（飯店旁）。'},
+      {n:'Galleria Umberto', a:'北角', note:'午餐限定西西里角餅、arancini，現金（飯店旁）。'},
+      {n:'Quincy Market 攤位', a:'Faneuil', note:'龍蝦堡、巧達湯與各國小吃（Day7 順路）。'},
+      {n:'Flour Bakery', a:'多分店', note:'Joanne Chang 名店，招牌 sticky bun。'},
+      {n:'Tasty Burger', a:'Fenway', note:'球場旁平價漢堡，紅襪日人氣（Day10 順路）。'},
+      {n:'Boston Public Market', a:'North Station', note:'在地食材美食廣場，就在飯店旁。'},
+    ]},
+  ]},
+];
+
+function renderFood() {
+  const body = document.getElementById('food-body');
+  body.innerHTML = FOOD.map(city => `
+    <div class="food-city">${city.city}</div>
+    ${city.tiers.map(t => `
+      <div class="food-tier">
+        <span class="food-tier-hd" style="background:${t.color}">${t.tier}</span>
+        <div class="food-list">
+          ${t.items.map(it => `
+            <div class="food-item">
+              <div class="food-name">${it.n}</div>
+              <div class="food-area">📍 ${it.a}</div>
+              <div class="food-note">${it.note}</div>
+            </div>`).join('')}
+        </div>
+      </div>`).join('')}
+  `).join('') + `
+    <div class="food-tip"><b>📋 小提醒</b>　價位與營業時間僅供參考、請以官方為準；熱門名店（Neptune、Carbone、Peter Luger 等）建議先訂位或提早去排隊。標「順路」者為離某天行程較近，方便臨時安排。</div>`;
+}
+
+function openFood() {
+  renderFood();
+  document.getElementById('food-overlay').classList.add('open');
+}
+function closeFood() {
+  document.getElementById('food-overlay').classList.remove('open');
+}
 
 /* ── Build sidebar ── */
 function buildSidebar() {

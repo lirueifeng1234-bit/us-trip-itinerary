@@ -139,8 +139,11 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .food-tier-hd{font-size:.8rem;font-weight:700;color:#fff;display:inline-block;padding:.2rem .6rem;border-radius:999px;margin-bottom:.5rem}
 .food-list{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .food-item{background:#fff;border:1px solid #e6e4df;border-radius:10px;padding:.55rem .7rem}
-.food-name{font-size:.8rem;font-weight:700;color:#1c1c1e;line-height:1.3}
+.food-name{display:inline-block;font-size:.8rem;font-weight:700;color:#1a6dd6;line-height:1.3;text-decoration:none}
+.food-name:hover{text-decoration:underline}
+.food-map{font-size:.72rem}
 .food-area{font-size:.66rem;color:#b3532f;font-weight:600;margin:.15rem 0 .2rem}
+.food-day{display:inline-block;font-size:.64rem;font-weight:700;color:#3a6b2f;background:#eaf5e6;border:1px solid #cfe7c6;border-radius:6px;padding:.05rem .35rem;margin-bottom:.25rem}
 .food-note{font-size:.7rem;color:#555;line-height:1.5}
 .food-tip{background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:.72rem .95rem;margin-top:1rem;font-size:.7rem;color:#666;line-height:1.7}
 .food-tip b{color:#7a2e1e}
@@ -808,67 +811,67 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeFligh
 
 /* ── Restaurants ── */
 const FOOD = [
-  { city:'🗽 紐約 New York', tiers:[
+  { city:'🗽 紐約 New York', gq:'New York', tiers:[
     { tier:'貴的 · 小奢華 Splurge（$$$）', color:'#8a5a1a', items:[
-      {n:'Le Bernardin', a:'中城 51st St', note:'米其林三星海鮮法餐，全球公認頂級，務必提前訂位。'},
-      {n:'Eleven Madison Park', a:'Flatiron', note:'米其林三星純素 fine dining，紐約最話題名店。'},
-      {n:'Peter Luger Steak House', a:'布魯克林 Williamsburg', note:'百年乾式熟成牛排傳奇（Day4 布魯克林順路）。'},
-      {n:'Keens Steakhouse', a:'中城 36th St', note:'1885 老牌牛排館，招牌羊排、天花板菸斗牆。'},
-      {n:'Carbone', a:'格林威治村', note:'復古義大利名店、一位難求（Day4 附近）。'},
-      {n:'The Modern', a:'MoMA 館內', note:'米其林二星，配藝術行程剛好（Day2 順路）。'},
-      {n:'Balthazar', a:'SoHo', note:'經典法式 brasserie，名人愛店（Day4 順路）。'},
-      {n:'Gramercy Tavern', a:'Gramercy', note:'美式精緻料理常勝軍，氛圍溫暖。'},
+      {n:'Le Bernardin', a:'中城 51st St', d:'Day1 中城／第五大道', note:'米其林三星海鮮法餐，全球公認頂級，務必提前訂位。'},
+      {n:'Eleven Madison Park', a:'Flatiron', d:'Day1 中城／第五大道', note:'米其林三星純素 fine dining，紐約最話題名店。'},
+      {n:'Peter Luger Steak House', a:'布魯克林 Williamsburg', d:'Day4 布魯克林／SoHo', note:'百年乾式熟成牛排傳奇。'},
+      {n:'Keens Steakhouse', a:'中城 36th St', d:'Day1 中城／第五大道', note:'1885 老牌牛排館，招牌羊排、天花板菸斗牆。'},
+      {n:'Carbone', a:'格林威治村', d:'Day4 SoHo／西村', note:'復古義大利名店、一位難求。'},
+      {n:'The Modern', a:'MoMA 館內', d:'Day2 中央公園／博物館', note:'米其林二星，配藝術行程剛好。'},
+      {n:'Balthazar', a:'SoHo', d:'Day4 布魯克林／SoHo', note:'經典法式 brasserie，名人愛店。'},
+      {n:'Gramercy Tavern', a:'Gramercy', d:'Day1 中城／第五大道', note:'美式精緻料理常勝軍，氛圍溫暖。'},
     ]},
     { tier:'中等價位 Mid-range（$$）', color:'#2f7d5b', items:[
-      {n:'Katz’s Delicatessen', a:'下東城', note:'1888 手切煙燻牛肉三明治，《當哈利遇上莎莉》場景。'},
-      {n:'Los Tacos No.1', a:'Chelsea Market／時代廣場', note:'公認全紐約最紅的墨西哥塔可（Day5 順路）。'},
-      {n:'Lombardi’s Pizza', a:'Nolita', note:'全美第一家披薩店（1905），煤爐薄脆。'},
-      {n:'Ippudo NY', a:'東村', note:'日本一風堂拉麵，濃郁豚骨湯。'},
-      {n:'Russ & Daughters', a:'下東城', note:'百年猶太熟食，貝果配燻鮭魚必試。'},
-      {n:'Levain Bakery', a:'上西城', note:'超厚爆漿餅乾，中央公園散步後順吃（Day2 附近）。'},
-      {n:'Eataly', a:'Flatiron／世貿', note:'大型義大利美食市集，現做義麵披薩。'},
-      {n:'Xi’an Famous Foods', a:'多分店', note:'手拉麵、孜然羊肉麵，平價又夠味。'},
+      {n:'Katz’s Delicatessen', a:'下東城', d:'Day4 SoHo／西村', note:'1888 手切煙燻牛肉三明治，《當哈利遇上莎莉》場景。'},
+      {n:'Los Tacos No.1', a:'Chelsea Market／時代廣場', d:'Day5 轉場（雀兒喜／High Line）', note:'公認全紐約最紅的墨西哥塔可。'},
+      {n:'Lombardi’s Pizza', a:'Nolita', d:'Day4 SoHo／西村', note:'全美第一家披薩店（1905），煤爐薄脆。'},
+      {n:'Ippudo NY', a:'東村', d:'Day4 SoHo／西村', note:'日本一風堂拉麵，濃郁豚骨湯。'},
+      {n:'Russ & Daughters', a:'下東城', d:'Day4 SoHo／西村', note:'百年猶太熟食，貝果配燻鮭魚必試。'},
+      {n:'Levain Bakery', a:'上西城', d:'Day2 中央公園／博物館', note:'超厚爆漿餅乾，中央公園散步後順吃。'},
+      {n:'Eataly', a:'Flatiron／世貿', d:'Day3 下城／自由女神', note:'大型義大利美食市集，現做義麵披薩（世貿分店近下城）。'},
+      {n:'Xi’an Famous Foods', a:'多分店', d:'Day4 SoHo／西村', note:'手拉麵、孜然羊肉麵，平價又夠味（中國城分店近西村）。'},
     ]},
     { tier:'便宜必吃 Cheap Eats（$）', color:'#b3532f', items:[
-      {n:'Joe’s Pizza', a:'格林威治村', note:'經典紐約街角切片披薩（Day4 順路）。'},
-      {n:'The Halal Guys', a:'中城 53rd & 6th', note:'街頭雞肉飯餐車始祖（Day1 飯店附近）。'},
-      {n:'Prince Street Pizza', a:'SoHo', note:'方形辣腸角落披薩，長年排隊（Day4 順路）。'},
-      {n:'Nom Wah Tea Parlor', a:'中國城', note:'1920 老字號港式點心，蝦餃燒賣。'},
-      {n:'Vanessa’s Dumpling House', a:'中國城／下東城', note:'銅板價煎餃與芝麻餅。'},
-      {n:'Ess-a-Bagel', a:'中城', note:'紐約經典大貝果，早餐好選擇。'},
-      {n:'Gray’s Papaya', a:'上西城', note:'24 小時經典熱狗，超平價。'},
-      {n:'Chelsea Market（美食街）', a:'Chelsea', note:'龍蝦、塔可、甜點一次逛（Day5 順路）。'},
-      {n:'Time Out Market', a:'DUMBO', note:'名店集結美食廣場，露台看大橋（Day4 順路）。'},
-      {n:'Magnolia Bakery', a:'多分店', note:'香蕉布丁與杯子蛋糕，甜點打卡。'},
+      {n:'Joe’s Pizza', a:'格林威治村', d:'Day4 SoHo／西村', note:'經典紐約街角切片披薩。'},
+      {n:'The Halal Guys', a:'中城 53rd & 6th', d:'Day1 中城（飯店附近）', note:'街頭雞肉飯餐車始祖。'},
+      {n:'Prince Street Pizza', a:'SoHo', d:'Day4 布魯克林／SoHo', note:'方形辣腸角落披薩，長年排隊。'},
+      {n:'Nom Wah Tea Parlor', a:'中國城', d:'Day4 SoHo／西村', note:'1920 老字號港式點心，蝦餃燒賣。'},
+      {n:'Vanessa’s Dumpling House', a:'中國城／下東城', d:'Day4 SoHo／西村', note:'銅板價煎餃與芝麻餅。'},
+      {n:'Ess-a-Bagel', a:'中城', d:'Day1 中城／第五大道', note:'紐約經典大貝果，早餐好選擇。'},
+      {n:'Gray’s Papaya', a:'上西城', d:'Day2 中央公園／博物館', note:'24 小時經典熱狗，超平價。'},
+      {n:'Chelsea Market（美食街）', a:'Chelsea', d:'Day5 轉場（雀兒喜／High Line）', note:'龍蝦、塔可、甜點一次逛。'},
+      {n:'Time Out Market', a:'DUMBO', d:'Day4 布魯克林／SoHo', note:'名店集結美食廣場，露台看大橋。'},
+      {n:'Magnolia Bakery', a:'多分店', d:'Day4 SoHo／西村', note:'香蕉布丁與杯子蛋糕，甜點打卡（西村本店）。'},
     ]},
   ]},
-  { city:'🦞 波士頓 Boston', tiers:[
+  { city:'🦞 波士頓 Boston', gq:'Boston', tiers:[
     { tier:'貴的 · 小奢華 Splurge（$$$）', color:'#8a5a1a', items:[
-      {n:'Neptune Oyster', a:'北角 North End', note:'生蠔＆龍蝦堡名店，不接受訂位常排隊（飯店旁）。'},
-      {n:'O Ya', a:'Leather District', note:'頂級創意壽司，波士頓最高級之一，需訂位。'},
-      {n:'Grill 23 & Bar', a:'後灣 Back Bay', note:'波士頓經典高級牛排館（Day10 附近）。'},
-      {n:'Mistral', a:'後灣', note:'地中海法式精緻料理，氣氛優雅。'},
-      {n:'Row 34', a:'Seaport', note:'精緻生蠔與海鮮、精釀啤酒（Day8 海港附近）。'},
-      {n:'Saltie Girl', a:'後灣 Newbury St', note:'時髦海鮮酒吧，罐頭海鮮與龍蝦（Day10 順路）。'},
+      {n:'Neptune Oyster', a:'北角 North End', d:'Day7 自由之路／北角（近飯店）', note:'生蠔＆龍蝦堡名店，不接受訂位常排隊。'},
+      {n:'O Ya', a:'Leather District', d:'Day8 金融區／海港', note:'頂級創意壽司，波士頓最高級之一，需訂位。'},
+      {n:'Grill 23 & Bar', a:'後灣 Back Bay', d:'Day10 後灣 Back Bay', note:'波士頓經典高級牛排館。'},
+      {n:'Mistral', a:'後灣', d:'Day10 後灣 Back Bay', note:'地中海法式精緻料理，氣氛優雅。'},
+      {n:'Row 34', a:'Seaport', d:'Day8 金融區／海港', note:'精緻生蠔與海鮮、精釀啤酒。'},
+      {n:'Saltie Girl', a:'後灣 Newbury St', d:'Day10 後灣 Back Bay', note:'時髦海鮮酒吧，罐頭海鮮與龍蝦。'},
     ]},
     { tier:'中等價位 Mid-range（$$）', color:'#2f7d5b', items:[
-      {n:'Union Oyster House', a:'Faneuil 旁', note:'全美最古老餐廳（1826），蛤蜊巧達湯（Day7 順路）。'},
-      {n:'Giacomo’s Ristorante', a:'北角 North End', note:'排隊義大利麵海鮮，現金、份量大（飯店旁）。'},
-      {n:'Legal Sea Foods', a:'多點／海港', note:'波士頓蛤蜊巧達湯代表，觀光客友善。'},
-      {n:'Mr. Bartley’s', a:'哈佛廣場', note:'傳奇漢堡店，配 frappe 奶昔（Day6 順路）。'},
-      {n:'Toro', a:'South End', note:'Ken Oringer 西班牙 tapas 名店，烤玉米必點。'},
-      {n:'Tatte Bakery', a:'多分店', note:'人氣中東風烘焙與早午餐，好拍好吃。'},
-      {n:'Yankee Lobster', a:'Seaport', note:'在地漁家龍蝦堡，海港氛圍（Day8 附近）。'},
+      {n:'Union Oyster House', a:'Faneuil 旁', d:'Day7 自由之路／北角', note:'全美最古老餐廳（1826），蛤蜊巧達湯。'},
+      {n:'Giacomo’s Ristorante', a:'北角 North End', d:'Day7 自由之路／北角（近飯店）', note:'排隊義大利麵海鮮，現金、份量大。'},
+      {n:'Legal Sea Foods', a:'多點／海港', d:'Day8 金融區／海港', note:'波士頓蛤蜊巧達湯代表，觀光客友善。'},
+      {n:'Mr. Bartley’s', a:'哈佛廣場', d:'Day6 劍橋（MIT＋哈佛）', note:'傳奇漢堡店，配 frappe 奶昔。'},
+      {n:'Toro', a:'South End', d:'Day10 後灣 Back Bay', note:'Ken Oringer 西班牙 tapas 名店，烤玉米必點。'},
+      {n:'Tatte Bakery', a:'多分店', d:'Day10 後灣 Back Bay', note:'人氣中東風烘焙與早午餐，好拍好吃（後灣分店）。'},
+      {n:'Yankee Lobster', a:'Seaport', d:'Day8 金融區／海港', note:'在地漁家龍蝦堡，海港氛圍。'},
     ]},
     { tier:'便宜必吃 Cheap Eats（$）', color:'#b3532f', items:[
-      {n:'Mike’s Pastry', a:'北角 North End', note:'排隊卡諾里 cannoli 名店（飯店旁）。'},
-      {n:'Modern Pastry', a:'北角', note:'在地人愛的卡諾里對手，現填酥脆（飯店旁）。'},
-      {n:'Regina Pizzeria', a:'北角', note:'1926 波士頓最老披薩，煤爐薄脆（飯店旁）。'},
-      {n:'Galleria Umberto', a:'北角', note:'午餐限定西西里角餅、arancini，現金（飯店旁）。'},
-      {n:'Quincy Market 攤位', a:'Faneuil', note:'龍蝦堡、巧達湯與各國小吃（Day7 順路）。'},
-      {n:'Flour Bakery', a:'多分店', note:'Joanne Chang 名店，招牌 sticky bun。'},
-      {n:'Tasty Burger', a:'Fenway', note:'球場旁平價漢堡，紅襪日人氣（Day10 順路）。'},
-      {n:'Boston Public Market', a:'North Station', note:'在地食材美食廣場，就在飯店旁。'},
+      {n:'Mike’s Pastry', a:'北角 North End', d:'Day7 自由之路／北角（近飯店）', note:'排隊卡諾里 cannoli 名店。'},
+      {n:'Modern Pastry', a:'北角', d:'Day7 自由之路／北角（近飯店）', note:'在地人愛的卡諾里對手，現填酥脆。'},
+      {n:'Regina Pizzeria', a:'北角', d:'Day7 自由之路／北角（近飯店）', note:'1926 波士頓最老披薩，煤爐薄脆。'},
+      {n:'Galleria Umberto', a:'北角', d:'Day7 自由之路／北角（近飯店）', note:'午餐限定西西里角餅、arancini，現金。'},
+      {n:'Quincy Market 攤位', a:'Faneuil', d:'Day7 自由之路／北角', note:'龍蝦堡、巧達湯與各國小吃。'},
+      {n:'Flour Bakery', a:'多分店', d:'Day8 金融區／海港', note:'Joanne Chang 名店，招牌 sticky bun（南站分店近海港）。'},
+      {n:'Tasty Burger', a:'Fenway', d:'Day10 後灣 Back Bay', note:'球場旁平價漢堡，紅襪日人氣。'},
+      {n:'Boston Public Market', a:'North Station', d:'Day6 劍橋／返程（就在飯店旁）', note:'在地食材美食廣場，就在飯店旁。'},
     ]},
   ]},
 ];
@@ -883,14 +886,16 @@ function renderFood() {
         <div class="food-list">
           ${t.items.map(it => `
             <div class="food-item">
-              <div class="food-name">${it.n}</div>
+              <a class="food-name" target="_blank" rel="noopener"
+                 href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(it.n + ' ' + city.gq)}">${it.n} <span class="food-map">🗺️</span></a>
               <div class="food-area">📍 ${it.a}</div>
+              <div class="food-day">🗓️ 最近：${it.d}</div>
               <div class="food-note">${it.note}</div>
             </div>`).join('')}
         </div>
       </div>`).join('')}
   `).join('') + `
-    <div class="food-tip"><b>📋 小提醒</b>　價位與營業時間僅供參考、請以官方為準；熱門名店（Neptune、Carbone、Peter Luger 等）建議先訂位或提早去排隊。標「順路」者為離某天行程較近，方便臨時安排。</div>`;
+    <div class="food-tip"><b>📋 小提醒</b>　每家都標了「🗓️ 最近：哪一天行程」方便臨時安排，點<b>店名</b>可直接開 Google 地圖導航。價位與營業時間僅供參考、請以官方為準；熱門名店（Neptune、Carbone、Peter Luger 等）建議先訂位或提早去排隊。</div>`;
 }
 
 function openFood() {
